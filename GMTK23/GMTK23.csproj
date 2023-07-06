@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <OutputType>Exe</OutputType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputType>WinExe</OutputType>
+    </PropertyGroup>
+    <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
