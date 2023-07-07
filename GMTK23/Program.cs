@@ -7,9 +7,13 @@ using Microsoft.Xna.Framework;
 var config = new WindowConfigWritable
 {
     WindowSize = new Point(1600, 900),
-    Title = "NotExplosive.net",
-    #if !DEBUG
+    Title = "GMTK 2023",
+#if !DEBUG
     Fullscreen = true,
-    #endif
+#endif
 };
-Bootstrap.Run(args, new WindowConfig(config), (runtime) => new MainCartridge(runtime));
+Bootstrap.Run(args, new WindowConfig(config), runtime =>
+{
+    Global.MultiCartridge = new MultiCartridge(runtime, new MainCartridge(runtime));
+    return Global.MultiCartridge;
+});
