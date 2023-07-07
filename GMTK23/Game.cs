@@ -14,6 +14,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
     private readonly Canvas _canvas;
     private readonly RectangleF _windowRect;
     private readonly Camera _scrollingCamera;
+    private readonly EntityCollection _entities = new();
 
     public Game(RectangleF windowRect)
     {
@@ -24,6 +25,9 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
         var cameraRect = new RectangleF(Vector2.Zero, renderResolution.ToVector2());
         _camera = new Camera(cameraRect, renderResolution);
         _scrollingCamera = new Camera(cameraRect, renderResolution);
+        
+        var player = _entities.AddImmediate(new PlayerShip());
+        player.Position = new Vector2(windowRect.Size.X / 2, 50);
     }
 
     public void Draw(Painter painter)
@@ -47,6 +51,12 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
 
         // draw entities
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
+
+        foreach (var entity in _entities)
+        {
+            entity.Draw(painter);
+        }
+        
         painter.EndSpriteBatch();
 
         // draw effects

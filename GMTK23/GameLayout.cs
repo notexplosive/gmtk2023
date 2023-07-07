@@ -17,12 +17,13 @@ public class GameLayout
 
     public void Compute(Point totalSize)
     {
+        var globalMargin = new Vector2(200, 16);
         var padding = 8;
         var builder = new LayoutBuilder(
             new Style(
                 PaddingBetweenElements: padding,
                 Orientation: Orientation.Horizontal,
-                Margin: new Vector2(16, 16))
+                Margin: globalMargin)
         );
 
         var left = builder.AddGroup(
