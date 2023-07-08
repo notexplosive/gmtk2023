@@ -8,6 +8,7 @@ public abstract class Ship : Entity
 {
     public Team Team { get; }
     public int Health { get; private set; }
+    public virtual RectangleF TakeDamageBox => BoundingBox.Inflated(-10, -10);
 
     public Ship(Team team, int health)
     {

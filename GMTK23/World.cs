@@ -27,7 +27,7 @@ public class World : IUpdateHook
 
             foreach (var ship in affectedShips)
             {
-                if (bullet.BoundingBox.Overlaps(ship.BoundingBox))
+                if (bullet.DealDamageBox.Overlaps(ship.TakeDamageBox))
                 {
                     bullet.Destroy();
                     ship.GetHitBy(bullet);

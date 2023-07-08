@@ -9,9 +9,14 @@ public class EnemyShip : Ship
     private readonly int _frame;
     private readonly ShipStats _shipStats;
     private float _bulletCooldownTimer;
+    private float _speed;
+
+    public override RectangleF TakeDamageBox => BoundingBox;
+
 
     public EnemyShip(ShipStats shipStats) : base(Team.Enemy, shipStats.Health)
     {
+        _speed = shipStats.Speed;
         _frame = shipStats.Frame;
         _shipStats = shipStats;
         _bulletCooldownTimer = shipStats.BulletCooldown * Client.Random.Clean.NextFloat();
@@ -33,7 +38,7 @@ public class EnemyShip : Ship
 
     public override void Update(float dt)
     {
-        Position += new Vector2(0, -80 * dt);
+        Position += new Vector2(0, -60 * dt * _speed);
         DestroyIfOutOfBounds();
         _bulletCooldownTimer -= dt;
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
@@ -76,7 +77,37 @@ public class Heatmap
         }
     }
 
-    public IEnumerable<HeatmapCell> GetCellsAlong(Vector2 start, Vector2 end)
+    public IEnumerable<HeatmapCell> SweepCellsAlong(RectangleF start, RectangleF end)
+    {
+        var length = (end.Center - start.Center).Length();
+        var numberOfSegments = length / _cellSize;
+        var percentIncrement = 1f / numberOfSegments;
+        RectangleF? previousRect = null;
+        for (float percent = 0; percent < 1; percent += percentIncrement)
+        {
+            var currentRect = RectangleF.Lerp(start, end, percent);
+            var currentFound =  GetCellsWithin(currentRect);
+            IEnumerable<HeatmapCell> newFound;
+            if (previousRect.HasValue)
+            {
+                var previousFound = GetCellsWithin(previousRect.Value);
+                newFound = currentFound.Except(previousFound);
+            }
+            else
+            {
+                newFound = currentFound;
+            }
+
+            foreach (var item in newFound)
+            {
+                yield return item;
+            }
+
+            previousRect = currentRect;
+        }
+    }
+    
+    public IEnumerable<HeatmapCell> GetCellsAlongLine(Vector2 start, Vector2 end)
     {
         var length = (end - start).Length();
         var numberOfSegments = length / _cellSize;

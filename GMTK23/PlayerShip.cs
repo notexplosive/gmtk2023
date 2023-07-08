@@ -71,7 +71,7 @@ public class PlayerShip : Ship
         {
             Heatmap.Zonify(enemy.BoundingBox.Inflated(10, 40).Moved(new Vector2(0, -30)), -dt);
 
-            var desiredZone = enemy.BoundingBox.Inflated(-5, 0);
+            var desiredZone = enemy.TakeDamageBox.Inflated(-10, 0);
             Heatmap.Zonify(RectangleF.FromCorners(new Vector2(desiredZone.X, 0), desiredZone.BottomRight),
                 dt * Heatmap.CoolingIncrement);
         }
@@ -81,7 +81,7 @@ public class PlayerShip : Ship
             if (bullet.Team == Team.Enemy)
             {
                 var bulletRect = bullet.DealDamageBox.Inflated(5, 5);
-                Heatmap.Zonify(RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0,20 * _speed), bulletRect.BottomRight), -dt * 2);
+                Heatmap.Zonify(RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0,5 * _speed), bulletRect.BottomRight), -dt * 2);
             }
         }
 
@@ -142,6 +142,10 @@ public class PlayerShip : Ship
             }
         }
 
+        candidates.Sort((a,b) => (a.Position - Position).LengthSquared().CompareTo((b.Position - Position).LengthSquared()));
+        
+        candidates.RemoveRange(candidates.Count / 2, candidates.Count / 2);
+        
         // highest desire should be at the front of the list
         candidates.Sort((a, b) => b.DesireScore.CompareTo(a.DesireScore));
 
@@ -197,7 +201,7 @@ public class PlayerShip : Ship
     private bool CanSafelyReach(Vector2 position, float tolerance)
     {
         var avoidance = 0f;
-        foreach (var cell in Heatmap.GetCellsAlong(Position, position))
+        foreach (var cell in Heatmap.SweepCellsAlong(TakeDamageBox, TakeDamageBox.Moved(position)))
         {
             avoidance += cell.AvoidScore;
 
@@ -209,7 +213,7 @@ public class PlayerShip : Ship
 
         return true;
     }
-
+    
     private bool GunIsCooledDown()
     {
         return _gunCooldownTimer < 0;
