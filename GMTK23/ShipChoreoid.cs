@@ -8,15 +8,15 @@ namespace GMTK23;
 
 public class ShipChoreoid : IChoreoid
 {
-    public delegate ITween ShipChoreoidDelegate(TweenableVector2 position);
+    public delegate ITween ShipChoreoidDelegate(TweenableFloat x, TweenableFloat y);
     private readonly List<ShipChoreoidDelegate> _tweenInstructions = new();
 
-    public SequenceTween GenerateTween(TweenableVector2 shipPosition)
+    public SequenceTween GenerateTween(TweenableFloat shipX,TweenableFloat shipY)
     {
         var result = new SequenceTween();
         foreach (var instruction in _tweenInstructions)
         {
-            result.Add(instruction(shipPosition));
+            result.Add(instruction(shipX, shipY));
         }
 
         return result;
@@ -24,12 +24,15 @@ public class ShipChoreoid : IChoreoid
 
     public void AddCallback(Action callback)
     {
-        Add(pos => new CallbackTween(callback));
+        Add((x,y) => new CallbackTween(callback));
     }
 
     public ShipChoreoid AddMoveTo(Vector2 target, float duration, Ease.Delegate easeFunction)
     {
-        Add(pos => pos.TweenTo(target, 0.5f, Ease.Linear));
+        
+        Add((x,y) => new MultiplexTween()
+            .AddChannel(x.TweenTo(target.X, duration, easeFunction))
+            .AddChannel(y.TweenTo(target.Y, duration, easeFunction)));
         return this;
     }
 

@@ -1,7 +1,6 @@
 ﻿using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExTween;
-using ExTweenMonoGame;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -11,12 +10,19 @@ public class EnemyShip : Ship
     private readonly SequenceTween _currentTween;
     private readonly int _frame;
     private readonly ShipStats _shipStats;
-    private float _bulletCooldownTimer;
     private readonly float _speed;
+    private float _bulletCooldownTimer;
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
-        _currentTween = shipChoreoid.GenerateTween(new TweenableVector2(() => Position, val => Position = val));
+        _currentTween = shipChoreoid.GenerateTween(
+            new TweenableFloat(
+                () => Position.X,
+                val => Position = new Vector2(val, Position.Y)),
+            new TweenableFloat(
+                () => Position.Y,
+                val => Position = new Vector2(Position.X, val))
+        );
         _speed = shipStats.Speed;
         _frame = shipStats.Frame;
         _shipStats = shipStats;
