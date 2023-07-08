@@ -76,6 +76,15 @@ public class PlayerShip : Ship
                 dt * Heatmap.CoolingIncrement);
         }
 
+        foreach (var bullet in Bullets)
+        {
+            if (bullet.Team == Team.Enemy)
+            {
+                var bulletRect = bullet.DealDamageBox.Inflated(5, 5);
+                Heatmap.Zonify(RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0,20 * _speed), bulletRect.BottomRight), -dt * 2);
+            }
+        }
+
         _gunCooldownTimer -= dt;
         ExecuteInput();
 

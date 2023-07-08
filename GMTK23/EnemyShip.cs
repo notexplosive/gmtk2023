@@ -8,11 +8,13 @@ public class EnemyShip : Ship
 {
     private readonly int _frame;
     private readonly ShipStats _shipStats;
+    private float _bulletCooldownTimer;
 
-    public EnemyShip(int frame, ShipStats shipStats) : base(Team.Enemy, shipStats.Health)
+    public EnemyShip(ShipStats shipStats) : base(Team.Enemy, shipStats.Health)
     {
-        _frame = frame;
+        _frame = shipStats.Frame;
         _shipStats = shipStats;
+        _bulletCooldownTimer = shipStats.BulletCooldown * Client.Random.Clean.NextFloat();
     }
 
     public RectangleF DealDamageBox =>
@@ -33,6 +35,13 @@ public class EnemyShip : Ship
     {
         Position += new Vector2(0, -80 * dt);
         DestroyIfOutOfBounds();
+        _bulletCooldownTimer -= dt;
+
+        if (_bulletCooldownTimer < 0)
+        {
+            _bulletCooldownTimer = _shipStats.BulletCooldown;
+            Shoot();
+        }
     }
 
     public override bool HasInvulnerabilityFrames()

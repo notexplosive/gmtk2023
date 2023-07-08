@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ExplogineCore;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
@@ -11,13 +13,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GMTK23;
 
-public static class Global
-{
-    public static MultiCartridge MultiCartridge = null!;
-
-    public static SpriteSheet ShipsSheet => Client.Assets.GetAsset<SpriteSheet>("Ships");
-}
-
 public class MainCartridge : BasicGameCartridge
 {
     private readonly GameLayout _layout;
@@ -29,7 +24,7 @@ public class MainCartridge : BasicGameCartridge
     }
 
     public override CartridgeConfig CartridgeConfig { get; } =
-        new(new Point(1280, 720), SamplerState.PointWrap);
+        new(new Point(768, 432), SamplerState.PointWrap);
 
     public override void OnCartridgeStarted()
     {
@@ -40,6 +35,9 @@ public class MainCartridge : BasicGameCartridge
         _rail.Add(game);
         _rail.Add(game.World);
         _rail.Add(game.World.Entities);
+        
+        var controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(game).ToList());
+        _rail.Add(controlPanel);
     }
 
     public override void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)
@@ -68,8 +66,8 @@ public class MainCartridge : BasicGameCartridge
 
         painter.DrawRectangle(_layout.Feedback, new DrawSettings());
         painter.DrawRectangle(_layout.Player, new DrawSettings());
-        painter.DrawRectangle(_layout.Game, new DrawSettings());
-        painter.DrawRectangle(_layout.Ui, new DrawSettings());
+        // painter.DrawRectangle(_layout.Game, new DrawSettings());
+        // painter.DrawRectangle(_layout.Controls, new DrawSettings());
 
         _rail.Draw(painter);
         painter.EndSpriteBatch();

@@ -16,6 +16,7 @@ public class Bullet : Entity
     }
 
     public Team Team { get; }
+    public RectangleF DealDamageBox => BoundingBox;
 
     public override void Draw(Painter painter)
     {

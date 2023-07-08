@@ -16,9 +16,9 @@ public class World : IUpdateHook
     public void Update(float dt)
     {
         var bullets = Entities.OfType<Bullet>().ToList();
-        var ships = Entities.OfType<Ship>().ToList();
-        var friendlyShips = ships.Where(ship => ship.Team == Team.Player).ToList();
-        var enemyShips = ships.Where(ship => ship.Team == Team.Enemy).ToList();
+        var shipsThatAreInBounds = Entities.OfType<Ship>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
+        var friendlyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Player).ToList();
+        var enemyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Enemy).ToList();
         var enemyShipsTypeSafe = enemyShips.OfType<EnemyShip>().ToList();
 
         foreach (var bullet in bullets)

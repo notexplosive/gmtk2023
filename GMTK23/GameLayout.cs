@@ -11,42 +11,42 @@ public class GameLayout
 
     public RectangleF Player { get; private set; }
 
-    public RectangleF Ui { get; private set; }
+    public RectangleF Controls { get; private set; }
 
     public RectangleF Game { get; private set; }
 
     public void Compute(Point totalSize)
     {
-        var globalMargin = new Vector2(200, 16);
-        var padding = 8;
+        var globalMargin = new Vector2(8, 8);
+        var padding = 4;
         var builder = new LayoutBuilder(
             new Style(
                 PaddingBetweenElements: padding,
-                Orientation: Orientation.Horizontal,
+                Orientation: Orientation.Vertical,
                 Margin: globalMargin)
         );
 
-        var left = builder.AddGroup(
+        var top = builder.AddGroup(
             new Style(
-                Orientation.Vertical,
+                Orientation.Horizontal,
                 padding),
-            L.FillVertical(420));
-        var right = builder.AddGroup(
+            L.FillHorizontal(420));
+
+
+        var topLeft = top.AddGroup(
             new Style(
                 Orientation.Vertical,
                 padding),
             L.FillBoth());
-
-        left.Add(L.FixedElement(nameof(GameLayout.Game), 420, 420));
-        left.Add(L.FillBoth(nameof(GameLayout.Feedback)));
-
-        right.Add(L.FillBoth(nameof(GameLayout.Ui)));
-        right.Add(L.FillBoth(nameof(GameLayout.Player)));
+        topLeft.Add(L.FillBoth(nameof(GameLayout.Feedback)));
+        topLeft.Add(L.FillBoth(nameof(GameLayout.Player)));
+        top.Add(L.FixedElement(nameof(GameLayout.Game), 420, 420));
+        top.Add(L.FillBoth(nameof(GameLayout.Controls)));
 
         var baked = builder.Bake(totalSize);
 
         Game = baked.FindElement(nameof(GameLayout.Game)).Rectangle;
-        Ui = baked.FindElement(nameof(GameLayout.Ui)).Rectangle;
+        Controls = baked.FindElement(nameof(GameLayout.Controls)).Rectangle;
         Player = baked.FindElement(nameof(GameLayout.Player)).Rectangle;
         Feedback = baked.FindElement(nameof(GameLayout.Feedback)).Rectangle;
     }

@@ -10,6 +10,8 @@ namespace GMTK23;
 
 public abstract class Entity : IUpdateHook
 {
+    private bool _hasEnteredBounds;
+
     public Entity()
     {
         RenderDepth = Depth.Middle;
@@ -42,9 +44,19 @@ public abstract class Entity : IUpdateHook
 
     public void DestroyIfOutOfBounds()
     {
-        if (!World.Bounds.Inflated(32, 32).Contains(Position))
+        var inBounds = World.Bounds.Inflated(32, 32).Contains(Position);
+
+        if (inBounds)
         {
-            Destroy();
+            _hasEnteredBounds = true;
+        }
+        
+        if (_hasEnteredBounds)
+        {
+            if (!inBounds)
+            {
+                Destroy();
+            }
         }
     }
 
