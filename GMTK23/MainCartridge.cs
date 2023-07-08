@@ -39,6 +39,9 @@ public class MainCartridge : BasicGameCartridge
         
         var controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(game).ToList());
         _rail.Add(controlPanel);
+
+        var playerPane = new PlayerPane(_layout.Player, game);
+        _rail.Add(playerPane);
     }
 
     public override void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)
@@ -66,7 +69,7 @@ public class MainCartridge : BasicGameCartridge
         painter.BeginSpriteBatch();
 
         painter.DrawRectangle(_layout.Feedback, new DrawSettings());
-        painter.DrawRectangle(_layout.Player, new DrawSettings());
+        // painter.DrawRectangle(_layout.Player, new DrawSettings());
         // painter.DrawRectangle(_layout.Game, new DrawSettings());
         // painter.DrawRectangle(_layout.Controls, new DrawSettings());
 
@@ -102,6 +105,9 @@ public class MainCartridge : BasicGameCartridge
 
         yield return new AssetLoadEvent("Explosion",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/explosion"), new Point(32)));
+        
+        yield return new AssetLoadEvent("PlayerPane",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player-pane"), new Point(162, 208)));
         
         yield return new AssetLoadEvent("BackgroundTexture",
             () =>
