@@ -27,7 +27,7 @@ public abstract class Ship : Entity
     {
         Health--;
 
-        if (Health < 0)
+        if (Health <= 0)
         {
             Destroy();
         }
