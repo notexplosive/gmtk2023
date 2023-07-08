@@ -44,8 +44,6 @@ public class PlayerShip : Ship
         {
             Heatmap.DebugDraw(painter);
         }
-
-        
         
         if (_invulnerableTimer > 0)
         {
