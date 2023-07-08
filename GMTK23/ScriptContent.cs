@@ -7,13 +7,14 @@ public static class ScriptContent
 {
     public static BulletStats PlayerBullet => new(10, 34);
 
+    public static BulletStats NoBullet => new(1, 35);
     public static BulletStats BasicEnemyBullet => new(3, 35);
     public static BulletStats Stinger => new(5, 36);
     public static BulletStats SlowVenom => new(2, 37);
     public static ShipStats BasicEnemy => new(1, 1, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
     public static ShipStats Beetle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
     public static ShipStats SmallCicada => new(9, 3, 5, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
-    public static ShipStats SmallCricket => new(3, 1, 0, new Vector2(5), ScriptContent.BasicEnemyBullet, 1f);
+    public static ShipStats SmallCricket => new(3, 1, 0, new Vector2(5), ScriptContent.NoBullet, 1f);
 
     public static ShipStats Centipede => new(10, 15, 1, new Vector2(10), ScriptContent.SlowVenom, 1f,
         new TailStats(11, 5, 2, ScriptContent.SlowVenom, 2));

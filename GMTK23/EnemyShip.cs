@@ -37,6 +37,7 @@ public class EnemyShip : Ship
         Destroyed += () =>
         {
             World.Entities.AddImmediate(new SpriteVfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"), Position, 0.5f));
+            World.ScoreDoober(Position, (int)(_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
         };
         TookDamage += () =>
         {

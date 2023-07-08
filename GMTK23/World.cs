@@ -67,4 +67,10 @@ public class World : IUpdateHook
             painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds, Alignment.Center, new DrawSettings());
         }
     }
+
+    public void ScoreDoober(Vector2 position, int score)
+    {
+        var vfx = Entities.AddImmediate(new TextVfx(score.ToString()));
+        vfx.Position = position;
+    }
 }

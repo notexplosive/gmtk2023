@@ -27,7 +27,7 @@ public class PlayerShip : Ship
 
         Destroyed += () =>
         {
-            var vfx = World.Entities.AddImmediate(new DynamicVfx());
+            var vfx = World.Entities.AddImmediate(new RectVfx());
             vfx.Position = Position;
             vfx.Tween
                 .Add(

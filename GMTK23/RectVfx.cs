@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-public class DynamicVfx : Entity
+public class RectVfx : Entity
 {
     public SequenceTween Tween { get; } = new();
     public TweenableVector2 TweenableSize { get; } = new(Vector2.Zero);
