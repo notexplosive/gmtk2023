@@ -16,6 +16,7 @@ public class EnemyShip : Ship
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
         _currentTween = shipChoreoid.GenerateTween(
+            this,
             new TweenableFloat(
                 () => Position.X,
                 val => Position = new Vector2(val, Position.Y)),
@@ -62,15 +63,19 @@ public class EnemyShip : Ship
             // default move forward
             Position += new Vector2(0, -60 * dt * _speed);
             DestroyIfOutOfBounds();
+            _bulletCooldownTimer -= dt;
+            
+            if (_bulletCooldownTimer < 0)
+            {
+                _bulletCooldownTimer = _shipStats.BulletCooldown;
+                ShootPreferredBullet();
+            }
         }
+    }
 
-        _bulletCooldownTimer -= dt;
-
-        if (_bulletCooldownTimer < 0)
-        {
-            _bulletCooldownTimer = _shipStats.BulletCooldown;
-            Shoot(_shipStats.BulletStats);
-        }
+    public void ShootPreferredBullet()
+    {
+        Shoot(_shipStats.BulletStats);
     }
 
     public override bool HasInvulnerabilityFrames()
