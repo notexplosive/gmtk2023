@@ -12,16 +12,16 @@ public interface IChoreoid
 public class MainChoreoid : IChoreoid
 {
     private readonly ShipStats _shipStats;
-    private readonly Summon _summon;
+    private readonly Wave _wave;
 
     /// <summary>
     ///     This needs tobe a list of Tween GENERATORS not ITweens directly because we need copies
     /// </summary>
     private readonly List<Func<ITween>> _tweenInstructions = new();
 
-    public MainChoreoid(Summon summon, ShipStats shipStats)
+    public MainChoreoid(Wave wave, ShipStats shipStats)
     {
-        _summon = summon;
+        _wave = wave;
         _shipStats = shipStats;
     }
 
@@ -36,7 +36,7 @@ public class MainChoreoid : IChoreoid
         var shipChoreoid = new ShipChoreoid();
         _tweenInstructions.Add(
             () => new CallbackTween(
-                () => _summon.SpawnShipAt(_shipStats, startPosition, shipChoreoid))
+                () => _wave.SpawnShipAt(_shipStats, startPosition, shipChoreoid))
             );
         return shipChoreoid;
     }

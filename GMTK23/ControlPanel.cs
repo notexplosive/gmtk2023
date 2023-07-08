@@ -12,7 +12,7 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
     private readonly RectangleF _windowRectangle;
     private readonly List<ControlPanelButton> _buttons;
 
-    public ControlPanel(RectangleF windowRectangle, List<Summon> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
+    public ControlPanel(RectangleF windowRectangle, List<Wave> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
     {
         _windowRectangle = windowRectangle;
         _buttons = new List<ControlPanelButton>();

@@ -3,18 +3,18 @@ using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-public class Summon
+public class Wave
 {
     private readonly Game _game;
-    private readonly SummonStats _summonStats;
+    private readonly WaveStats _waveStats;
     public float Cooldown { get; }
     private readonly List<MainChoreoid> _choreiods = new();
 
-    public Summon(Game game, SummonStats summonStats)
+    public Wave(Game game, WaveStats waveStats)
     {
         _game = game;
-        _summonStats = summonStats;
-        Cooldown = summonStats.Cooldown;
+        _waveStats = waveStats;
+        Cooldown = waveStats.Cooldown;
     }
 
     public void Execute()
@@ -39,4 +39,4 @@ public class Summon
     }
 }
 
-public record SummonStats(float Cooldown);
+public record WaveStats(float Cooldown);

@@ -11,14 +11,14 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
 {
     private readonly HoverState _isHovered = new();
     private readonly RectangleF _rectangle;
-    private readonly Summon _summon;
+    private readonly Wave _wave;
     private float _cooldownTimer;
     private bool _primed;
 
-    public ControlPanelButton(RectangleF rectangle, Summon summon)
+    public ControlPanelButton(RectangleF rectangle, Wave wave)
     {
         _rectangle = rectangle;
-        _summon = summon;
+        _wave = wave;
     }
 
     public void Draw(Painter painter)
@@ -33,7 +33,7 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
         painter.DrawRectangle(
             RectangleF.FromCorners(_rectangle.TopLeft,
                 Vector2Extensions.Lerp(_rectangle.BottomLeft, _rectangle.BottomRight,
-                    _cooldownTimer / _summon.Cooldown)),
+                    _cooldownTimer / _wave.Cooldown)),
             new DrawSettings {Color = Color.Black.WithMultipliedOpacity(0.5f), Depth = Depth.Middle - 1000});
     }
 
@@ -56,8 +56,8 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
         {
             if (_primed && _isHovered)
             {
-                _summon.Execute();
-                _cooldownTimer = _summon.Cooldown;
+                _wave.Execute();
+                _cooldownTimer = _wave.Cooldown;
             }
 
             _primed = false;

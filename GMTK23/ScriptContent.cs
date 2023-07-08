@@ -11,12 +11,12 @@ public static class ScriptContent
     public static BulletStats BasicEnemyBullet => new(3, 34);
     public static ShipStats BasicEnemy => new(1, 2, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
 
-    public static IEnumerable<Summon> Summons(Game game)
+    public static IEnumerable<Wave> Summons(Game game)
     {
         var worldBounds = game.World.Bounds;
         var worldBoundsInset = worldBounds.Inflated(-20, -20);
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
-        var summon = new Summon(game, new SummonStats(1f));
+        var summon = new Wave(game, new WaveStats(1f));
 
         var main = summon.AddChoreoid(ScriptContent.BasicEnemy);
 
