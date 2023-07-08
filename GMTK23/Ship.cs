@@ -14,15 +14,6 @@ public abstract class Ship : TeamedEntity
 
     public int Health { get; private set; }
 
-    public void Shoot(BulletStats bulletStats)
-    {
-        World.Entities.DeferredActions.Add(() =>
-        {
-            var bullet = World.Entities.AddImmediate(new Bullet(Team, bulletStats));
-            bullet.Position = Position;
-        });
-    }
-
     protected override void TakeDamageInternal()
     {
         if (HasInvulnerabilityFrames())

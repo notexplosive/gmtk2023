@@ -9,10 +9,10 @@ public static class ScriptContent
 
     public static BulletStats BasicEnemyBullet => new(3, 35);
     public static BulletStats Stinger => new(5, 36);
-    public static BulletStats SlowVenom => new(1, 37);
+    public static BulletStats SlowVenom => new(2, 37);
     public static ShipStats BasicEnemy => new(1, 2, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
     public static ShipStats Beetle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
-    public static ShipStats Centipede => new(10, 20, 1, new Vector2(10), ScriptContent.SlowVenom, 1f, new TailStats(11, 5));
+    public static ShipStats Centipede => new(10, 20, 1, new Vector2(10), ScriptContent.SlowVenom, 1f, new TailStats(11, 5, 2, ScriptContent.SlowVenom));
 
     public static IEnumerable<Wave> Summons(Game game)
     {

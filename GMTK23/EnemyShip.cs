@@ -1,4 +1,5 @@
-﻿using ExplogineMonoGame;
+﻿using System.Collections.Generic;
+using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using ExTween;
@@ -8,7 +9,7 @@ namespace GMTK23;
 
 public class EnemyShip : Ship
 {
-    private readonly SequenceTween _currentTween;
+    private readonly SequenceTween? _currentTween;
     private readonly int _frame;
     private readonly ShipStats _shipStats;
     private readonly float _speed;
@@ -85,7 +86,7 @@ public class EnemyShip : Ship
     public override void Update(float dt)
     {
         DamageFlashTimer -= dt;
-        
+
         if (_currentTween != null && !_currentTween.IsDone())
         {
             // tween based movement

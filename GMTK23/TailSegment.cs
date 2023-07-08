@@ -11,8 +11,10 @@ public class TailSegment : TeamedEntity
 {
     private readonly int _frame;
     private readonly EnemyShip _master;
+    private readonly TailStats _tailStats;
     private readonly Queue<Vector2> _nextPositions;
     private readonly Entity _nextSegment;
+    private float _bulletCooldownTimer;
 
     public override RectangleF TakeDamageBox => BoundingBox;
 
@@ -20,6 +22,7 @@ public class TailSegment : TeamedEntity
     {
         _nextSegment = nextSegment;
         _master = master;
+        _tailStats = tailStats;
 
         _frame = tailStats.Frame;
         master.Destroyed += () =>
@@ -33,6 +36,8 @@ public class TailSegment : TeamedEntity
         _nextPositions = new Queue<Vector2>();
         _nextPositions.Enqueue(nextSegment.Position);
         _nextPositions.Enqueue(nextSegment.Position);
+
+        _bulletCooldownTimer = Client.Random.Clean.NextFloat() * tailStats.BulletCooldown;
     }
 
     public override void Draw(Painter painter)
@@ -56,6 +61,13 @@ public class TailSegment : TeamedEntity
     {
         Position = _nextPositions.Dequeue();
         _nextPositions.Enqueue(_nextSegment.Position);
+
+        _bulletCooldownTimer -= dt;
+        if (_bulletCooldownTimer < 0)
+        {
+            _bulletCooldownTimer = _tailStats.BulletCooldown;
+            Shoot(_tailStats.BulletStats);
+        }
     }
 
     protected override void TakeDamageInternal()

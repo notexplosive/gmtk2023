@@ -31,4 +31,14 @@ public abstract class TeamedEntity : Entity
         TakeDamageInternal();
         otherShip.TakeDamageInternal();
     }
+    
+    
+    public void Shoot(BulletStats bulletStats)
+    {
+        World.Entities.DeferredActions.Add(() =>
+        {
+            var bullet = World.Entities.AddImmediate(new Bullet(Team, bulletStats));
+            bullet.Position = Position;
+        });
+    }
 }

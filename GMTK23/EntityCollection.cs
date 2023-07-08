@@ -27,7 +27,7 @@ public class EntityCollection : IEnumerable<Entity>, IUpdateHook
         return GetEnumerator();
     }
 
-    public Entity AddImmediate(Entity entity)
+    public T AddImmediate<T>(T entity) where T : Entity
     {
         _content.Add(entity);
         entity.World = _world;
