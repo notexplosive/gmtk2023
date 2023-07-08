@@ -43,7 +43,7 @@ public class Heatmap
     {
         foreach (var cell in _cells.Values)
         {
-            var color = new Color(1,1 - cell.Want / 60f,1);
+            var color = new Color(1,1 - cell.Want / 5f,1);
             
             painter.DrawRectangle(cell.Rectangle.Inflated(-1,-1), new DrawSettings
             {
@@ -81,6 +81,14 @@ public class Heatmap
             }
 
             mostRecentCell = found;
+        }
+    }
+
+    public void Update(float dt)
+    {
+        foreach (var cell in _cells.Values)
+        {
+            cell.Update(dt);
         }
     }
 }

@@ -20,6 +20,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public readonly World World;
     private readonly PlayerShip _player;
+    private Vector2 _mousePos;
 
     public Game(RectangleF windowRect)
     {
@@ -76,6 +77,20 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     public void Update(float dt)
     {
         _scrollingCamera.CenterPosition += new Vector2(0, dt * 60);
+        
+        // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
+        //
+        // var foundCells = new HashSet<HeatmapCell>();
+        // foreach (var cell in _player.Heatmap.GetCellsWithin(rect))
+        // {
+        //     if (foundCells.Contains(cell))
+        //     {
+        //         Client.Debug.Log("dupe");
+        //     }
+        //         
+        //     foundCells.Add(cell);
+        //     cell.Want += dt * 5;
+        // }
     }
 
     public void UpdateInput(ConsumableInput input, HitTestStack parentHitTestStack)
@@ -89,7 +104,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             _windowRect.CanvasToScreen(_windowRect.Size.ToPoint()) * _camera.ScreenToCanvas, Depth.Middle, _windowRect);
 
         hitTestStack.AddInfiniteZone(Depth.Middle, _hoverState);
-        var mousePos = input.Mouse.Position(hitTestStack.WorldMatrix);
+        _mousePos = input.Mouse.Position(hitTestStack.WorldMatrix);
         if (_hoverState)
         {
             if (input.Mouse.GetButton(MouseButton.Left).WasPressed)
@@ -97,29 +112,13 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
                 World.Entities.DeferredActions.Add(() =>
                 {
                     var ent = World.Entities.AddImmediate(new EnemyShip(1, new ShipStats(3)));
-                    ent.Position = mousePos;
+                    ent.Position = _mousePos;
                 });
             }
 
             if (input.Mouse.GetButton(MouseButton.Right).WasPressed)
             {
-                _player.TargetPosition = mousePos;
-            }
-
-            _player.Heatmap.GetCellAt(mousePos).Want++;
-
-            var rect = new RectangleF(mousePos, Vector2.Zero).Inflated(30, 30);
-
-            var foundCells = new HashSet<HeatmapCell>();
-            foreach (var cell in _player.Heatmap.GetCellsAlong(new Vector2(200, 200), mousePos))
-            {
-                if (foundCells.Contains(cell))
-                {
-                    Client.Debug.Log("dupe");
-                }
-                
-                foundCells.Add(cell);
-                cell.Want += 0.25f;
+                _player.TargetPosition = _mousePos;
             }
         }
     }

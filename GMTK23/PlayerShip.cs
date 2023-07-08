@@ -37,6 +37,7 @@ public class PlayerShip : Ship
 
     public override void Update(float dt)
     {
+        Heatmap.Update(dt);
         _state = _state.UpdateState(dt, this, World);
         /*
         var desiredPosition = Position;
