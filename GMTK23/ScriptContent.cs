@@ -74,8 +74,6 @@ public static class ScriptContent
             }
         }
 
-
-
         return wave;
     }
 

@@ -27,6 +27,8 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public Game(RectangleF windowRect)
     {
+        Global.MusicPlayer.Play();
+        
         _windowRect = windowRect;
         var renderResolution = windowRect.Size.ToPoint();
         _canvas = new Canvas(renderResolution);
