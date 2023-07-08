@@ -180,3 +180,9 @@
 /processorParam:TextureFormat=Color
 /build:gmtk/tiles.png
 
+#begin gmtk/Whiten.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:gmtk/Whiten.fx
+

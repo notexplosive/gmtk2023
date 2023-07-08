@@ -86,6 +86,24 @@ public class MainCartridge : BasicGameCartridge
         yield return new AssetLoadEvent("Ships",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/sheet"), new Point(32, 32)));
         
+        yield return new AssetLoadEvent("white-ships-sheet",
+            () =>
+            {
+                var sheet = Client.Assets.GetTexture("gmtk/sheet");
+                var canvas = new Canvas(sheet.Width, sheet.Height);
+                
+                Client.Graphics.PushCanvas(canvas);
+                painter.BeginSpriteBatch(Matrix.Identity, Client.Assets.GetEffect("gmtk/Whiten"));
+                painter.DrawAtPosition(sheet, Vector2.Zero);
+                painter.EndSpriteBatch();
+                Client.Graphics.PopCanvas();
+                
+                return canvas.AsTextureAsset();
+            });
+        
+        yield return new AssetLoadEvent("WhiteShips",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("white-ships-sheet"), new Point(32, 32)));
+        
         yield return new AssetLoadEvent("Player",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player"), new Point(32, 32)));
         

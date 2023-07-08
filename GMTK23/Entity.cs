@@ -66,9 +66,9 @@ public abstract class Entity : IUpdateHook
         World.Entities.DeferredActions.Add(() =>
         {
             World.Entities.RemoveImmediate(this);
-            OnDestroy?.Invoke();
+            Destroyed?.Invoke();
         });
     }
 
-    public event Action OnDestroy;
+    public event Action Destroyed;
 }

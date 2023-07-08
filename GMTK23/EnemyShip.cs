@@ -13,6 +13,7 @@ public class EnemyShip : Ship
     private readonly ShipStats _shipStats;
     private readonly float _speed;
     private float _bulletCooldownTimer;
+    private float _damageFlashTimer;
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
@@ -30,9 +31,13 @@ public class EnemyShip : Ship
         _shipStats = shipStats;
         _bulletCooldownTimer = shipStats.BulletCooldown * Client.Random.Clean.NextFloat();
 
-        OnDestroy += () =>
+        Destroyed += () =>
         {
             World.Entities.AddImmediate(new Vfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"), Position, 0.5f));
+        };
+        TookDamage += () =>
+        {
+            _damageFlashTimer = 2f/60;
         };
     }
 
@@ -48,12 +53,21 @@ public class EnemyShip : Ship
             painter.DrawRectangle(DealDamageBox, new DrawSettings {Color = Color.Red});
         }
 
-        Global.MainSheet.DrawFrameAtPosition(painter, _frame, Position, Scale2D.One,
+        var sheet = Global.MainSheet;
+
+        if (_damageFlashTimer > 0)
+        {
+            sheet = Global.MainSheetWithFlash;
+        }
+
+        sheet.DrawFrameAtPosition(painter, _frame, Position, Scale2D.One,
             new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
     }
 
     public override void Update(float dt)
     {
+        _damageFlashTimer -= dt;
+        
         if (_currentTween != null && !_currentTween.IsDone())
         {
             // tween based movement
