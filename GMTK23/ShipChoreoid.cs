@@ -29,15 +29,35 @@ public class ShipChoreoid : IChoreoid
 
     public ShipChoreoid AddMoveTo(Vector2 target, float duration, Ease.Delegate easeFunction)
     {
+        return AddMoveTo(target, duration, easeFunction, easeFunction);
+    }
+    
+    public ShipChoreoid AddMoveTo(Vector2 target, float duration, Ease.Delegate easeFunctionX, Ease.Delegate easeFunctionY)
+    {
         
         Add((x,y) => new MultiplexTween()
-            .AddChannel(x.TweenTo(target.X, duration, easeFunction))
-            .AddChannel(y.TweenTo(target.Y, duration, easeFunction)));
+            .AddChannel(x.TweenTo(target.X, duration, easeFunctionX))
+            .AddChannel(y.TweenTo(target.Y, duration, easeFunctionY)));
         return this;
+    }
+    
+    public ShipChoreoid AddMoveToFastX(Vector2 target, float duration)
+    {
+        return AddMoveTo(target, duration, Ease.QuadFastSlow, Ease.QuadSlowFast);
+    }
+    
+    public ShipChoreoid AddMoveToFastY(Vector2 target, float duration)
+    {
+        return AddMoveTo(target, duration, Ease.QuadSlowFast, Ease.QuadFastSlow);
     }
 
     public void Add(ShipChoreoidDelegate tween)
     {
         _tweenInstructions.Add(tween);
+    }
+
+    public void AddWait(float duration)
+    {
+        Add((x,y) => new WaitSecondsTween(duration));
     }
 }

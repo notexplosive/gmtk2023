@@ -24,16 +24,19 @@ public static class ScriptContent
         var leftMiddleSpawn = new Vector2(worldBoundsOutset.Left, worldBounds.Center.Y);
 
         main.AddSpawnEvent(leftMiddleSpawn)
-            .AddMoveTo(new Vector2(worldBounds.Width / 8, worldBoundsInset.Bottom), 0.2f, Ease.QuadFastSlow);
-
+            .AddMoveToFastX(new Vector2(worldBounds.Width / 8, worldBoundsInset.Bottom), 0.5f)
+            .AddWait(0.1f);
         main.AddSpawnEvent(rightMiddleSpawn)
-            .AddMoveTo(new Vector2(worldBounds.Width * 7 / 8f, worldBoundsInset.Bottom), 0.2f, Ease.QuadFastSlow);
+            .AddMoveToFastX(new Vector2(worldBounds.Width * 7 / 8f, worldBoundsInset.Bottom), 0.5f)
+            .AddWait(0.1f);
 
         main.AddWaitEvent(0.1f);
         main.AddSpawnEvent(leftMiddleSpawn)
-            .AddMoveTo(new Vector2(worldBounds.Width / 3, worldBoundsInset.Bottom), 0.2f, Ease.QuadFastSlow);
+            .AddMoveToFastX(new Vector2(worldBounds.Width / 3, worldBoundsInset.Bottom), 0.5f)
+            .AddWait(0.1f);
         main.AddSpawnEvent(rightMiddleSpawn)
-            .AddMoveTo(new Vector2(worldBounds.Width * 2 / 3f, worldBoundsInset.Bottom), 0.2f, Ease.QuadFastSlow);
+            .AddMoveToFastX(new Vector2(worldBounds.Width * 2 / 3f, worldBoundsInset.Bottom), 0.5f)
+            .AddWait(0.1f);
 
         yield return summon;
     }
