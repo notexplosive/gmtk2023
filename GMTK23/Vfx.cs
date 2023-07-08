@@ -1,4 +1,5 @@
-﻿using ExplogineMonoGame;
+﻿using System;
+using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
@@ -37,6 +38,6 @@ public class Vfx : Entity
 
     public int Frame()
     {
-        return (int)_frameTime;
+        return Math.Min((int)_frameTime, _spriteSheet.FrameCount-1);
     }
 }

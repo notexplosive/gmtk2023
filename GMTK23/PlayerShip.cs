@@ -87,7 +87,10 @@ public class PlayerShip : Ship
 
         foreach (var enemy in Enemies)
         {
-            Heatmap.Zonify(enemy.BoundingBox.Inflated(10, 40).Moved(new Vector2(0, -30)), -dt);
+            if (enemy is EnemyShip enemyShip)
+            {
+                Heatmap.Zonify(enemyShip.DealDamageBox.Inflated(0, 40).Moved(new Vector2(0, -30)), -dt);
+            }
 
             var desiredZone = enemy.TakeDamageBox.Inflated(-10, 0);
             Heatmap.Zonify(RectangleF.FromCorners(new Vector2(desiredZone.X, 0), desiredZone.BottomRight),
@@ -128,12 +131,15 @@ public class PlayerShip : Ship
             }
         }
 
-        var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
-        if (shootReacted && GunIsCooledDown())
+        if (Enemies.Any())
         {
-            _gunCooldownTimer = 0.1f;
-            Shoot(ScriptContent.PlayerBullet);
-            _shouldAnimate = true;
+            var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
+            if (shootReacted && GunIsCooledDown())
+            {
+                _gunCooldownTimer = 0.1f;
+                Shoot(ScriptContent.PlayerBullet);
+                _shouldAnimate = true;
+            }
         }
     }
 

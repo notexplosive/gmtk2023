@@ -15,6 +15,7 @@ public class TailSegment : TeamedEntity
     private readonly Queue<Vector2> _nextPositions;
     private readonly Entity _nextSegment;
     private float _bulletCooldownTimer;
+    private bool _isReady;
 
     public override RectangleF TakeDamageBox => BoundingBox;
 
@@ -34,14 +35,16 @@ public class TailSegment : TeamedEntity
 
         Position = nextSegment.Position;
         _nextPositions = new Queue<Vector2>();
-        _nextPositions.Enqueue(nextSegment.Position);
-        _nextPositions.Enqueue(nextSegment.Position);
 
         _bulletCooldownTimer = Client.Random.Clean.NextFloat() * tailStats.BulletCooldown;
     }
 
     public override void Draw(Painter painter)
     {
+        if (!_isReady)
+        {
+            return;
+        }
         var nextPosition = _nextPositions.Peek();
 
         var sheet = Global.MainSheet;
@@ -59,8 +62,20 @@ public class TailSegment : TeamedEntity
 
     public override void Update(float dt)
     {
-        Position = _nextPositions.Dequeue();
         _nextPositions.Enqueue(_nextSegment.Position);
+        
+        if (!_isReady)
+        {
+            Position = _nextPositions.Peek();
+            _isReady = _nextPositions.Count > _tailStats.DelayFrames;
+        }
+
+        if (!_isReady)
+        {
+            return;
+        }
+        
+        Position = _nextPositions.Dequeue();
 
         _bulletCooldownTimer -= dt;
         if (_bulletCooldownTimer < 0)
