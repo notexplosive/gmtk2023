@@ -13,6 +13,7 @@ public static class ScriptContent
     public static ShipStats BasicEnemy => new(1, 1, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
     public static ShipStats Beetle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
     public static ShipStats SmallCicada => new(9, 3, 5, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
+    public static ShipStats SmallCricket => new(3, 1, 0, new Vector2(5), ScriptContent.BasicEnemyBullet, 1f);
 
     public static ShipStats Centipede => new(10, 15, 1, new Vector2(10), ScriptContent.SlowVenom, 1f,
         new TailStats(11, 5, 2, ScriptContent.SlowVenom, 2));
@@ -23,6 +24,59 @@ public static class ScriptContent
         yield return ScriptContent.BeetleTankWave(game);
         yield return ScriptContent.CentipedeWave(game);
         yield return ScriptContent.SmallCicadaWave(game);
+        yield return ScriptContent.CricketSwarmWave(game);
+    }
+
+    private static Wave CricketSwarmWave(Game game)
+    {
+        var worldBounds = game.World.Bounds;
+        var center = worldBounds.Center.X;
+        var worldBoundsOutset = worldBounds.Inflated(64, 64);
+        var worldBoundsInset = worldBounds.Inflated(-100, -100);
+
+        var wave = new Wave(game, new WaveStats(10f));
+        var leftSpawner = wave.AddChoreoid(ScriptContent.SmallCricket);
+        var rightSpawner = wave.AddChoreoid(ScriptContent.SmallCricket);
+
+        var leftShips = new List<ShipChoreoid>();
+        var rightShips = new List<ShipChoreoid>();
+        
+        for (int i = 0; i < 10; i++)
+        {
+            var leftShip = leftSpawner.AddSpawnEvent(new Vector2(worldBoundsOutset.Left, worldBoundsInset.Bottom));
+            leftSpawner.AddWaitEvent(0.25f);
+            leftShip.AddMoveToFastX(new Vector2(center, worldBoundsOutset.Bottom), 1);
+            leftShips.Add(leftShip);
+            
+            var rightShip = rightSpawner.AddSpawnEvent(new Vector2(worldBoundsOutset.Right, worldBoundsInset.Bottom));
+            rightSpawner.AddWaitEvent(0.25f);
+            rightShip.AddMoveToFastX(new Vector2(center, worldBoundsOutset.Bottom), 1);
+            rightShips.Add(rightShip);
+        }
+
+        {
+            var pos = worldBoundsInset.BottomLeft;
+            var increment = worldBoundsInset.Width / leftShips.Count;
+            foreach (var ship in leftShips)
+            {
+                ship.AddMoveToFastY(pos, 0.5f);
+                pos.X += increment;
+            }
+        }
+        
+        {
+            var pos = worldBoundsInset.BottomRight;
+            var increment = worldBoundsInset.Width / rightShips.Count;
+            foreach (var ship in rightShips)
+            {
+                ship.AddMoveToFastY(pos, 0.5f);
+                pos.X -= increment;
+            }
+        }
+
+
+
+        return wave;
     }
 
     private static Wave SmallCicadaWave(Game game)
@@ -37,7 +91,6 @@ public static class ScriptContent
         var main = wave.AddChoreoid(ScriptContent.SmallCicada);
 
         var a = main.AddSpawnEvent(new Vector2(center, worldBounds.Bottom));
-
         var b = main.AddSpawnEvent(new Vector2(center, worldBounds.Bottom));
 
         var beatLength = 0.1f;

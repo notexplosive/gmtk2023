@@ -14,6 +14,7 @@ public class EnemyShip : Ship
     private readonly ShipStats _shipStats;
     private readonly float _speed;
     private float _bulletCooldownTimer;
+    private readonly bool _doesNotShoot;
     public float DamageFlashTimer { get; private set; }
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
@@ -31,6 +32,7 @@ public class EnemyShip : Ship
         _frame = shipStats.Frame;
         _shipStats = shipStats;
         _bulletCooldownTimer = shipStats.BulletCooldown * Client.Random.Clean.NextFloat();
+        _doesNotShoot = _shipStats.BulletCooldown == 0;
 
         Destroyed += () =>
         {
@@ -114,6 +116,10 @@ public class EnemyShip : Ship
 
     public void ShootPreferredBullet()
     {
+        if (_doesNotShoot)
+        {
+            return;
+        }
         Shoot(_shipStats.BulletStats);
     }
 
