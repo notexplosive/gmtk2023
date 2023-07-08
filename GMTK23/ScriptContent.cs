@@ -5,7 +5,10 @@ namespace GMTK23;
 
 public static class ScriptContent
 {
-    public static ShipStats BasicEnemy => new(1, 2, 1, new Vector2(10));
+    public static BulletStats PlayerBullet => new(10);
+    
+    public static BulletStats BasicEnemyBullet => new(10);
+    public static ShipStats BasicEnemy => new(1, 2, 1, new Vector2(10), BasicEnemyBullet);
 
     public static IEnumerable<Summon> Summons(Game game)
     {

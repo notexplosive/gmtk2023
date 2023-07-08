@@ -40,7 +40,7 @@ public class EnemyShip : Ship
         if (_bulletCooldownTimer < 0)
         {
             _bulletCooldownTimer = _shipStats.BulletCooldown;
-            Shoot();
+            Shoot(_shipStats.BulletStats);
         }
     }
 

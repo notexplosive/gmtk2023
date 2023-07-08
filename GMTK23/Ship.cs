@@ -16,11 +16,11 @@ public abstract class Ship : Entity
         Health = health;
     }
     
-    public void Shoot()
+    public void Shoot(BulletStats bulletStats)
     {
         World.Entities.DeferredActions.Add(() =>
         {
-            var bullet = World.Entities.AddImmediate(new Bullet(Team,10));
+            var bullet = World.Entities.AddImmediate(new Bullet(Team, bulletStats));
             bullet.Position = Position;
         });
     }

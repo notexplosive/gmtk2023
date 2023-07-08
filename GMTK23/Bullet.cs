@@ -6,12 +6,14 @@ namespace GMTK23;
 
 public class Bullet : Entity
 {
+    private readonly BulletStats _bulletStats;
     private readonly float _speed;
 
-    public Bullet(Team team, float speed)
+    public Bullet(Team team, BulletStats bulletStats)
     {
+        _bulletStats = bulletStats;
         Team = team;
-        _speed = speed;
+        _speed = bulletStats.Speed;
         Size = new Vector2(5);
     }
 

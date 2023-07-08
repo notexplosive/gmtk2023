@@ -112,7 +112,7 @@ public class PlayerShip : Ship
         if (shootReacted && GunIsCooledDown())
         {
             _gunCooldownTimer = 0.1f;
-            Shoot();
+            Shoot(ScriptContent.PlayerBullet);
         }
     }
 

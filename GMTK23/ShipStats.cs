@@ -2,4 +2,4 @@
 
 namespace GMTK23;
 
-public record ShipStats(int Frame, int Health, float BulletCooldown, Vector2 DealDamageAreaSize);
+public record ShipStats(int Frame, int Health, float BulletCooldown, Vector2 DealDamageAreaSize, BulletStats BulletStats);
