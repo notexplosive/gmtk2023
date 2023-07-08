@@ -7,19 +7,15 @@ namespace GMTK23;
 [Serializable]
 public class PlayerPersonality
 {
-    public float PersonalSpaceRadius()
-    {
-        return 100;
-    }
-
     public float MovementReactionSkillPercent()
     {
+        // how quick they are to react (with regard to movement)
         return 0.20f;
     }
 
     public float Clumsiness()
     {
-        // clumsy is (1f - accuracy)
+        // How much they fudge their target position
         return 20;
     }
 
@@ -31,7 +27,14 @@ public class PlayerPersonality
 
     public float ShootReactionSkillPercent()
     {
+        // how quick they are to react (with regard to movement)
         return 0.30f;
+    }
+
+    public float RiskTolerance()
+    {
+        // how quick they are to react (with regard to movement)
+        return 0.1f;
     }
 
     public RectangleF ComfortZone(Vector2 worldSize)

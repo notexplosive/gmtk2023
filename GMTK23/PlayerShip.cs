@@ -125,7 +125,7 @@ public class PlayerShip : Ship
 
         var attempts = 10;
         bool gaveUp = false;
-        while (!CanSafelyReach(candidates[winnerIndex].Position, 0.1f))
+        while (!CanSafelyReach(candidates[winnerIndex].Position, _personality.RiskTolerance()))
         {
             if (attempts < 0 || winnerIndex >= candidates.Count)
             {
