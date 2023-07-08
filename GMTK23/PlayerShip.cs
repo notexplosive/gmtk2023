@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
@@ -46,9 +48,9 @@ public class PlayerShip : Ship
         
         foreach (var enemy in Enemies)
         {
-            Heatmap.Zonify(enemy.HitBox.Inflated(10, 40).Moved(new Vector2(0,-30)), -dt);
+            Heatmap.Zonify(enemy.BoundingBox.Inflated(10, 40).Moved(new Vector2(0,-30)), -dt);
 
-            var desiredZone = enemy.HitBox.Inflated(-5, 0);
+            var desiredZone = enemy.BoundingBox.Inflated(-5, 0);
             Heatmap.Zonify(RectangleF.FromCorners(new Vector2(desiredZone.X, 0), desiredZone.BottomRight), dt * Heatmap.CoolingIncrement);
         }
 
@@ -61,6 +63,45 @@ public class PlayerShip : Ship
 
     private void ExecuteInput()
     {
+        var movementReacted = Client.Random.Clean.NextFloat() < _personality.MovementReactionSkillPercent();
+        if (movementReacted)
+        {
+            var cellsWithinHitBox = Heatmap.GetCellsWithin(BoundingBox).ToList();
+            if (cellsWithinHitBox.Any(a=> a.AvoidScore > 0))
+            {
+                _inputState = MoveAwayFromBad();
+            }
+            else
+            {
+                _inputState = MoveTowardDesired();
+            }
+        }
+        
+        var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
+        if (shootReacted && GunIsCooledDown())
+        {
+            _gunCooldownTimer = 0.1f;
+            Shoot();
+        }
+    }
+
+    private InputState MoveAwayFromBad()
+    {
+        var target = Position;
+        foreach (var cell in Heatmap.GetCellsWithin(BoundingBox))
+        {
+            if (cell.AvoidScore > 0)
+            {
+                target += Position - cell.Position;
+            }
+        }
+
+        var result = InputStateForTarget(target);
+        return result;
+    }
+
+    private InputState MoveTowardDesired()
+    {
         var candidates = new List<HeatmapCell>();
         foreach (var cell in Heatmap.GetCellsWithin(_personality.ComfortZone(World.Bounds.Size)))
         {
@@ -69,13 +110,13 @@ public class PlayerShip : Ship
                 candidates.Add(cell);
             }
         }
-        
+
         // highest desire should be at the front of the list
         candidates.Sort((a, b) => b.DesireScore.CompareTo(a.DesireScore));
 
         if (candidates.Count == 0)
         {
-            return;
+            return new InputState();
         }
 
         var randomRange = Math.Min(candidates.Count, 5);
@@ -84,50 +125,42 @@ public class PlayerShip : Ship
 
         var attempts = 10;
         bool gaveUp = false;
-        while(!CanSafelyReach(candidates[winnerIndex].Position, 0.1f))
+        while (!CanSafelyReach(candidates[winnerIndex].Position, 0.1f))
         {
             if (attempts < 0 || winnerIndex >= candidates.Count)
             {
                 gaveUp = true;
                 break;
             }
-            
+
             winnerIndex++;
             attempts--;
         }
 
-        var targetPosition =
-            winner.Position + Client.Random.Clean.NextNormalVector2() * _personality.Clumsiness();
-        var difference = targetPosition - Position;
-        var movementReacted = Client.Random.Clean.NextFloat() < _personality.MovementReactionSkillPercent();
-        var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
-
-        if (movementReacted)
+        if (gaveUp)
         {
-            var isCloseEnough = difference.Length() < _personality.HowCloseItWantsToBeToTargetPosition();
-            if (isCloseEnough || gaveUp)
-            {
-                _inputState = new InputState
-                {
-                    Horizontal = 0,
-                    Vertical = 0
-                };
-            }
-            else
-            {
-                _inputState = new InputState
-                {
-                    Horizontal = difference.X,
-                    Vertical = difference.Y
-                };
-            }
+            return new InputState();
         }
 
-        if (shootReacted && GunIsCooledDown())
+        return InputStateForTarget(winner.Position);
+    }
+
+    private InputState InputStateForTarget(Vector2 target)
+    {
+        var finalTarget =
+            target + Client.Random.Clean.NextNormalVector2() * _personality.Clumsiness();
+        var difference = finalTarget - Position;
+
+        if (difference.Length() < _personality.HowCloseItWantsToBeToTargetPosition())
         {
-            _gunCooldownTimer = 0.1f;
-            Shoot();
+            return new InputState();
         }
+
+        return new InputState
+        {
+            Horizontal = difference.X,
+            Vertical = difference.Y
+        };
     }
 
     private bool CanSafelyReach(Vector2 position, float tolerance)

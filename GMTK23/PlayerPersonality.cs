@@ -14,7 +14,7 @@ public class PlayerPersonality
 
     public float MovementReactionSkillPercent()
     {
-        return 0.30f;
+        return 0.20f;
     }
 
     public float Clumsiness()

@@ -26,7 +26,7 @@ public class World : IUpdateHook
 
             foreach (var ship in affectedShips)
             {
-                if (RectangleF.Intersect(bullet.HitBox, ship.HitBox).Area > 0)
+                if (RectangleF.Intersect(bullet.BoundingBox, ship.BoundingBox).Area > 0)
                 {
                     bullet.Destroy();
                     ship.GetHitBy(bullet);

@@ -19,7 +19,7 @@ public class Bullet : Entity
 
     public override void Draw(Painter painter)
     {
-        painter.DrawRectangle(HitBox, new DrawSettings {Depth = RenderDepth});
+        painter.DrawRectangle(BoundingBox, new DrawSettings {Depth = RenderDepth});
     }
 
     public override void Update(float dt)

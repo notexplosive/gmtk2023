@@ -25,7 +25,7 @@ public abstract class Entity : IUpdateHook
     public bool FlaggedAsDead { get; set; }
     public bool IsAlive => !FlaggedAsDead;
     public bool IsDead => FlaggedAsDead;
-    public RectangleF HitBox => new RectangleF(Position, Vector2.Zero).Inflated(Size.X /2f, Size.Y /2f);
+    public RectangleF BoundingBox => new RectangleF(Position, Vector2.Zero).Inflated(Size.X /2f, Size.Y /2f);
     public Vector2 Size { get; set; }
 
     public virtual void Update(float dt)
