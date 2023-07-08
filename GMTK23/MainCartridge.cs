@@ -81,5 +81,8 @@ public class MainCartridge : BasicGameCartridge
     {
         yield return new AssetLoadEvent("Ships",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/sheet"), new Point(32, 32)));
+        
+        yield return new AssetLoadEvent("Player",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player"), new Point(32, 32)));
     }
 }

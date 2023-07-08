@@ -1,4 +1,5 @@
-﻿using ExplogineMonoGame;
+﻿using ExplogineCore.Data;
+using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
 
@@ -22,6 +23,15 @@ public class Bullet : Entity
 
     public override void Draw(Painter painter)
     {
+        var flip = new XyBool(false, true);
+
+        if (Team == Team.Player)
+        {
+            flip = XyBool.False;
+        }
+        
+        Global.MainSheet.DrawFrameAtPosition(painter, _bulletStats.Frame, Position, Scale2D.One,
+            new DrawSettings {Flip = flip, Origin = DrawOrigin.Center, Depth = RenderDepth});
         painter.DrawRectangle(BoundingBox, new DrawSettings {Depth = RenderDepth});
     }
 

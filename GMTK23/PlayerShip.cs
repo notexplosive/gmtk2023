@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
@@ -13,10 +12,12 @@ public class PlayerShip : Ship
 {
     private readonly PlayerPersonality _personality;
     private readonly float _speed = 5f;
+    private float _animTimer;
     private float _gunCooldownTimer;
     private InputState _inputState = new();
-    private float _invulnerableTimer;
     private bool _invisibleToggle;
+    private float _invulnerableTimer;
+    private bool _shouldAnimate;
 
     public PlayerShip(PlayerPersonality personality) : base(Team.Player, 5)
     {
@@ -44,7 +45,7 @@ public class PlayerShip : Ship
         {
             Heatmap.DebugDraw(painter);
         }
-        
+
         if (_invulnerableTimer > 0)
         {
             _invisibleToggle = !_invisibleToggle;
@@ -54,16 +55,33 @@ public class PlayerShip : Ship
                 return;
             }
         }
-        
 
-        Global.ShipsSheet.DrawFrameAtPosition(painter, 0, Position, Scale2D.One,
+        var frame = 2;
+        if (_shouldAnimate)
+        {
+            frame = (int) _animTimer;
+        }
+
+        Global.PlayerSheet.DrawFrameAtPosition(painter, frame, Position, Scale2D.One,
             new DrawSettings {Flip = new XyBool(false, true), Origin = DrawOrigin.Center, Depth = RenderDepth});
     }
 
     public override void Update(float dt)
     {
-        _invulnerableTimer -= dt;
         Heatmap.Update(dt);
+
+        _invulnerableTimer -= dt;
+
+        if (_shouldAnimate)
+        {
+            _animTimer += dt * 20;
+
+            if (_animTimer >= 5)
+            {
+                _shouldAnimate = false;
+                _animTimer = 0;
+            }
+        }
 
         Heatmap.Zonify(_personality.PreferredZone(World.Bounds.Size), dt);
 
@@ -81,7 +99,9 @@ public class PlayerShip : Ship
             if (bullet.Team == Team.Enemy)
             {
                 var bulletRect = bullet.DealDamageBox.Inflated(5, 5);
-                Heatmap.Zonify(RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0,5 * _speed), bulletRect.BottomRight), -dt * 2);
+                Heatmap.Zonify(
+                    RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0, 5 * _speed), bulletRect.BottomRight),
+                    -dt * 2);
             }
         }
 
@@ -113,6 +133,7 @@ public class PlayerShip : Ship
         {
             _gunCooldownTimer = 0.1f;
             Shoot(ScriptContent.PlayerBullet);
+            _shouldAnimate = true;
         }
     }
 
@@ -142,10 +163,13 @@ public class PlayerShip : Ship
             }
         }
 
-        candidates.Sort((a,b) => (a.Position - Position).LengthSquared().CompareTo((b.Position - Position).LengthSquared()));
-        
+        // lowest length should be at the front
+        candidates.Sort((a, b) =>
+            (a.Position - Position).LengthSquared().CompareTo((b.Position - Position).LengthSquared()));
+
+        // cut off half the list, so we only consider things that are nearby
         candidates.RemoveRange(candidates.Count / 2, candidates.Count / 2);
-        
+
         // highest desire should be at the front of the list
         candidates.Sort((a, b) => b.DesireScore.CompareTo(a.DesireScore));
 
@@ -213,7 +237,7 @@ public class PlayerShip : Ship
 
         return true;
     }
-    
+
     private bool GunIsCooledDown()
     {
         return _gunCooldownTimer < 0;

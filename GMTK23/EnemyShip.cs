@@ -32,7 +32,7 @@ public class EnemyShip : Ship
             painter.DrawRectangle(DealDamageBox, new DrawSettings{Color = Color.Red});
         }
         
-        Global.ShipsSheet.DrawFrameAtPosition(painter, _frame, Position, Scale2D.One,
+        Global.MainSheet.DrawFrameAtPosition(painter, _frame, Position, Scale2D.One,
             new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
     }
 

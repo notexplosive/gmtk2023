@@ -8,5 +8,6 @@ public static class Global
 {
     public static MultiCartridge MultiCartridge = null!;
 
-    public static SpriteSheet ShipsSheet => Client.Assets.GetAsset<SpriteSheet>("Ships");
+    public static SpriteSheet MainSheet => Client.Assets.GetAsset<SpriteSheet>("Ships");
+    public static SpriteSheet PlayerSheet => Client.Assets.GetAsset<SpriteSheet>("Player");
 }
