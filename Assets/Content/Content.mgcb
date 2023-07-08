@@ -90,6 +90,12 @@
 #begin engine/pointfree.ttf
 /copy:engine/pointfree.ttf
 
+#begin gmtk/music_main.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/music_main.ogg
+
 #begin gmtk/player.png
 /importer:TextureImporter
 /processor:TextureProcessor
