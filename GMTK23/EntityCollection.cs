@@ -31,6 +31,7 @@ public class EntityCollection : IEnumerable<Entity>, IUpdateHook
     {
         _content.Add(entity);
         entity.World = _world;
+        entity.Awake();
         return entity;
     }
 

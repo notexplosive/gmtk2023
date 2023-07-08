@@ -1,16 +1,13 @@
-﻿using System;
-using System.Linq;
-using ExplogineCore.Data;
+﻿using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-
-
 public class PlayerShip : Ship
 {
+    public Heatmap Heatmap { get; private set; }
     private readonly PlayerPersonality _personality;
     private readonly float _speed = 5f;
     private float _gunCooldownTimer;
@@ -23,12 +20,19 @@ public class PlayerShip : Ship
         _state = IdleState.Instance;
     }
 
+    public override void Awake()
+    {
+        Heatmap = new Heatmap(World.Bounds.Size, 10);
+    }
+
     public Vector2 TargetPosition { get; set; }
 
     public override void Draw(Painter painter)
     {
         Global.ShipsSheet.DrawFrameAtPosition(painter, 0, Position, Scale2D.One,
             new DrawSettings {Flip = new XyBool(false, true), Origin = DrawOrigin.Center, Depth = RenderDepth});
+
+        Heatmap.DebugDraw(painter);
     }
 
     public override void Update(float dt)

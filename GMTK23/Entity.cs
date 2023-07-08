@@ -33,6 +33,11 @@ public abstract class Entity : IUpdateHook
         // blank on purpose
     }
 
+    public virtual void Awake()
+    {
+        // blank on purpose
+    }
+
     public abstract void Draw(Painter painter);
 
     public void DestroyIfOutOfBounds()

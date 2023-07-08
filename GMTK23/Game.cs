@@ -1,4 +1,6 @@
-﻿using ExplogineCore.Data;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
@@ -102,6 +104,22 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             if (input.Mouse.GetButton(MouseButton.Right).WasPressed)
             {
                 _player.TargetPosition = mousePos;
+            }
+
+            _player.Heatmap.GetCellAt(mousePos).Want++;
+
+            var rect = new RectangleF(mousePos, Vector2.Zero).Inflated(30, 30);
+
+            var foundCells = new HashSet<HeatmapCell>();
+            foreach (var cell in _player.Heatmap.GetCellsAlong(new Vector2(200, 200), mousePos))
+            {
+                if (foundCells.Contains(cell))
+                {
+                    Client.Debug.Log("dupe");
+                }
+                
+                foundCells.Add(cell);
+                cell.Want += 0.25f;
             }
         }
     }
