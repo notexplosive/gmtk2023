@@ -1,4 +1,5 @@
 ﻿using ExplogineMonoGame;
+using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using ExTween;
 using Microsoft.Xna.Framework;
@@ -28,6 +29,11 @@ public class EnemyShip : Ship
         _frame = shipStats.Frame;
         _shipStats = shipStats;
         _bulletCooldownTimer = shipStats.BulletCooldown * Client.Random.Clean.NextFloat();
+
+        OnDestroy += () =>
+        {
+            World.Entities.AddImmediate(new Vfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"), Position, 0.5f));
+        };
     }
 
     public override RectangleF TakeDamageBox => BoundingBox;

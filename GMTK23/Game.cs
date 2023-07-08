@@ -94,6 +94,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
         foreach (var entity in World.Entities)
         {
+            if (entity is Vfx)
+            {
+                continue;
+            }
+            
             entity.Draw(painter);
         }
 
@@ -102,6 +107,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         // draw effects
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
 
+        foreach (var entity in World.Entities)
+        {
+            if (entity is Vfx)
+            {
+                entity.Draw(painter);
+            }
+        }
+        
         painter.EndSpriteBatch();
         Client.Graphics.PopCanvas();
     }

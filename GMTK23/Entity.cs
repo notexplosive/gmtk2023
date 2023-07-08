@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
@@ -27,7 +28,7 @@ public abstract class Entity : IUpdateHook
     public bool FlaggedAsDead { get; set; }
     public bool IsAlive => !FlaggedAsDead;
     public bool IsDead => FlaggedAsDead;
-    public RectangleF BoundingBox => new RectangleF(Position, Vector2.Zero).Inflated(Size.X /2f, Size.Y /2f);
+    public RectangleF BoundingBox => new RectangleF(Position, Vector2.Zero).Inflated(Size.X / 2f, Size.Y / 2f);
     public Vector2 Size { get; set; }
 
     public virtual void Update(float dt)
@@ -50,7 +51,7 @@ public abstract class Entity : IUpdateHook
         {
             _hasEnteredBounds = true;
         }
-        
+
         if (_hasEnteredBounds)
         {
             if (!inBounds)
@@ -62,6 +63,12 @@ public abstract class Entity : IUpdateHook
 
     public void Destroy()
     {
-        World.Entities.DeferredActions.Add(() => { World.Entities.RemoveImmediate(this); });
+        World.Entities.DeferredActions.Add(() =>
+        {
+            World.Entities.RemoveImmediate(this);
+            OnDestroy?.Invoke();
+        });
     }
+
+    public event Action OnDestroy;
 }
