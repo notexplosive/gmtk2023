@@ -32,7 +32,10 @@ public class Bullet : Entity
         
         Global.MainSheet.DrawFrameAtPosition(painter, _bulletStats.Frame, Position, Scale2D.One,
             new DrawSettings {Flip = flip, Origin = DrawOrigin.Center, Depth = RenderDepth});
+        
+        /*
         painter.DrawRectangle(DealDamageBox, new DrawSettings {Depth = RenderDepth});
+        */
     }
 
     public override void Update(float dt)

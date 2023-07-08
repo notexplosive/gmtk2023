@@ -1,4 +1,5 @@
-﻿using ExplogineCore.Data;
+﻿using System;
+using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Input;
@@ -29,11 +30,12 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
             color = Color.LightBlue;
         }
 
+        var percent = Math.Clamp(_cooldownTimer / _wave.Cooldown, 0, 1f);
         painter.DrawRectangle(_rectangle, new DrawSettings {Color = color, Depth = Depth.Middle});
         painter.DrawRectangle(
             RectangleF.FromCorners(_rectangle.TopLeft,
                 Vector2Extensions.Lerp(_rectangle.BottomLeft, _rectangle.BottomRight,
-                    _cooldownTimer / _wave.Cooldown)),
+                    percent)),
             new DrawSettings {Color = Color.Black.WithMultipliedOpacity(0.5f), Depth = Depth.Middle - 1000});
     }
 
