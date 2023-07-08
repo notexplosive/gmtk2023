@@ -41,7 +41,7 @@ public class EnemyShip : Ship
                 World.Entities.AddImmediate(new SpriteVfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"),
                     Position, 0.5f));
                 World.ScoreDoober(Position, (int) (_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
-                Global.PlaySound("gmtk23_enemy4");
+                Global.PlaySound("gmtk23_enemy3");
 
             }
         };
@@ -50,7 +50,7 @@ public class EnemyShip : Ship
             DamageFlashTimer = 2f/60;
             if (Health > 0)
             {
-                Global.PlaySound("gmtk23_enemy3");
+                Global.PlaySound("gmtk23_enemy6");
             }
         };
     }

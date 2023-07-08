@@ -1,4 +1,5 @@
 ﻿using System;
+using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
 
@@ -20,19 +21,15 @@ public abstract class TeamedEntity : Entity
 
     public void TakeDamage()
     {
-        TakeDamageInternal();
-        TookDamage?.Invoke();
+        if (TakeDamageInternal())
+        {
+            TookDamage?.Invoke();
+        }
     }
 
-    protected abstract void TakeDamageInternal();
-    
-    public void GetHitBy(TeamedEntity otherShip)
-    {
-        TakeDamageInternal();
-        otherShip.TakeDamageInternal();
-    }
-    
-    
+    protected abstract bool TakeDamageInternal();
+
+
     public void Shoot(BulletStats bulletStats)
     {
         World.Entities.DeferredActions.Add(() =>

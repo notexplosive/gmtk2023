@@ -85,8 +85,9 @@ public class TailSegment : TeamedEntity
         }
     }
 
-    protected override void TakeDamageInternal()
+    protected override bool TakeDamageInternal()
     {
         _master.TakeDamage();
+        return true;
     }
 }

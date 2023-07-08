@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
@@ -65,7 +66,9 @@ public class PlayerShip : Ship
 
     private void OnTookDamage()
     {
-        _invulnerableTimer = 1f;
+        Global.PlaySound("gmtk23_enemy4");
+        Client.Debug.Log($"Took Damage {Health}");
+            _invulnerableTimer = 1f;
     }
 
     public override void Awake()

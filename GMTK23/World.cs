@@ -51,7 +51,7 @@ public class World : IUpdateHook
             {
                 if (enemyShip.DealDamageBox.Overlaps(friendlyShip.BoundingBox))
                 {
-                    friendlyShip.GetHitBy(enemyShip);
+                    friendlyShip.TakeDamage();
                 }
             }
         }

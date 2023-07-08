@@ -14,11 +14,11 @@ public abstract class Ship : TeamedEntity
 
     public int Health { get; private set; }
 
-    protected override void TakeDamageInternal()
+    protected override bool TakeDamageInternal()
     {
         if (HasInvulnerabilityFrames())
         {
-            return;
+            return false;
         }
 
         Health--;
@@ -27,6 +27,8 @@ public abstract class Ship : TeamedEntity
         {
             Destroy();
         }
+
+        return true;
     }
 
     public abstract bool HasInvulnerabilityFrames();
