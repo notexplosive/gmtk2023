@@ -17,7 +17,7 @@ namespace GMTK23;
 public class MainCartridge : BasicGameCartridge
 {
     private readonly GameLayout _layout;
-    private Rail _rail;
+    private Rail _rail = new();
 
     public MainCartridge(IRuntime runtime) : base(runtime)
     {

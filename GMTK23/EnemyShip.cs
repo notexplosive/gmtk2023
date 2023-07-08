@@ -13,7 +13,7 @@ public class EnemyShip : Ship
     private readonly ShipStats _shipStats;
     private readonly float _speed;
     private float _bulletCooldownTimer;
-    private float _damageFlashTimer;
+    public float DamageFlashTimer { get; private set; }
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
@@ -37,8 +37,18 @@ public class EnemyShip : Ship
         };
         TookDamage += () =>
         {
-            _damageFlashTimer = 2f/60;
+            DamageFlashTimer = 2f/60;
         };
+    }
+
+    private void SetupTail(TailStats tailStats)
+    {
+        var tailSegment = World.Entities.AddImmediate(new TailSegment(this, this, tailStats));
+
+        for (int i = 1; i < tailStats.NumberOfSegments; i++)
+        {
+            tailSegment = World.Entities.AddImmediate(new TailSegment(tailSegment, this, tailStats));
+        }
     }
 
     public override RectangleF TakeDamageBox => BoundingBox;
@@ -46,6 +56,14 @@ public class EnemyShip : Ship
     public RectangleF DealDamageBox =>
         RectangleF.InflateFrom(Position, _shipStats.DealDamageAreaSize.X, _shipStats.DealDamageAreaSize.Y);
 
+    public override void Awake()
+    {
+        if (_shipStats.Tail != null)
+        {
+            SetupTail(_shipStats.Tail);
+        }
+    }
+    
     public override void Draw(Painter painter)
     {
         if (Client.Debug.IsActive)
@@ -55,7 +73,7 @@ public class EnemyShip : Ship
 
         var sheet = Global.MainSheet;
 
-        if (_damageFlashTimer > 0)
+        if (DamageFlashTimer > 0)
         {
             sheet = Global.MainSheetWithFlash;
         }
@@ -66,7 +84,7 @@ public class EnemyShip : Ship
 
     public override void Update(float dt)
     {
-        _damageFlashTimer -= dt;
+        DamageFlashTimer -= dt;
         
         if (_currentTween != null && !_currentTween.IsDone())
         {

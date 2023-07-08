@@ -25,7 +25,7 @@ public class PlayerShip : Ship
         TookDamage += OnTookDamage;
     }
 
-    public Heatmap Heatmap { get; private set; }
+    public Heatmap Heatmap { get; private set; } = null!;
 
     public Vector2 TargetPosition { get; set; }
 

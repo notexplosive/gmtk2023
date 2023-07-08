@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ExTween;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -10,24 +9,59 @@ public static class ScriptContent
 
     public static BulletStats BasicEnemyBullet => new(3, 35);
     public static BulletStats Stinger => new(5, 36);
+    public static BulletStats SlowVenom => new(1, 37);
     public static ShipStats BasicEnemy => new(1, 2, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
     public static ShipStats Beetle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
+    public static ShipStats Centipede => new(10, 20, 1, new Vector2(10), ScriptContent.SlowVenom, 1f, new TailStats(11, 5));
 
     public static IEnumerable<Wave> Summons(Game game)
     {
-        yield return BasicFormation(game);
-        yield return Tank(game);
+        yield return ScriptContent.BasicFormation(game);
+        yield return ScriptContent.BeetleTank(game);
+        yield return ScriptContent.CentipedeWave(game);
     }
 
-    private static Wave Tank(Game game)
+    private static Wave CentipedeWave(Game game)
+    {
+        var worldBounds = game.World.Bounds;
+        var center = worldBounds.Center.X;
+
+        var wave = new Wave(game, new WaveStats(10f));
+        
+        var main = wave.AddChoreoid(ScriptContent.Centipede);
+
+        var ship = main.AddSpawnEvent(new Vector2(worldBounds.Right, worldBounds.Bottom));
+        
+        var forwardStep = 0f;
+        for (var i = 0; i < 15; i++)
+        {
+            // across
+            ship.MoveLinear(new Vector2(worldBounds.Left, worldBounds.Bottom - forwardStep), 0.5f);
+            forwardStep += 20f;
+            
+            // forward (fast)
+            ship.MoveLinear(new Vector2(worldBounds.Left, worldBounds.Bottom - forwardStep), 0.05f);
+            
+            // across
+            ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.5f);
+            forwardStep += 20f;
+            
+            // forward (fast)
+            ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.05f);
+        }
+
+        return wave;
+    }
+
+    private static Wave BeetleTank(Game game)
     {
         var worldBounds = game.World.Bounds;
         var worldBoundsInset = worldBounds.Inflated(-50, -50);
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
         var center = worldBounds.Center.X;
-        
+
         var wave = new Wave(game, new WaveStats(5f));
-        
+
         var main = wave.AddChoreoid(ScriptContent.Beetle);
 
         var ship = main.AddSpawnEvent(new Vector2(center, worldBounds.Bottom))
@@ -35,7 +69,7 @@ public static class ScriptContent
             .AddWait(0.1f);
 
         var backStep = 0f;
-        for (int i = 0; i < 5; i++)
+        for (var i = 0; i < 5; i++)
         {
             backStep += 10f;
             ship.AddMoveToFastX(new Vector2(worldBounds.Width / 8, center + backStep), 0.5f)
@@ -50,7 +84,7 @@ public static class ScriptContent
         }
 
         ship.AddMoveToFastX(new Vector2(center, worldBoundsInset.Bottom), 0.5f);
-        
+
         return wave;
     }
 

@@ -112,7 +112,7 @@ public class Heatmap
         var length = (end - start).Length();
         var numberOfSegments = length / _cellSize;
         var percentIncrement = 1f / numberOfSegments;
-        HeatmapCell mostRecentCell = null;
+        HeatmapCell mostRecentCell = null!;
         for (float percent = 0; percent < 1; percent += percentIncrement)
         {
             var found =  GetCellAt(Vector2Extensions.Lerp(start, end, percent));

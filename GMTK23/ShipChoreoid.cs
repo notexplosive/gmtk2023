@@ -41,6 +41,11 @@ public class ShipChoreoid : IChoreoid
         return this;
     }
     
+    public ShipChoreoid MoveLinear(Vector2 target, float duration)
+    {
+        return AddMoveTo(target, duration, Ease.Linear, Ease.Linear);
+    }
+    
     public ShipChoreoid AddMoveToFastX(Vector2 target, float duration)
     {
         return AddMoveTo(target, duration, Ease.QuadFastSlow, Ease.QuadSlowFast);

@@ -4,19 +4,16 @@ using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-public abstract class Ship : Entity
+public abstract class Ship : TeamedEntity
 {
-    public Team Team { get; }
-    public int Health { get; private set; }
-    public virtual RectangleF TakeDamageBox => BoundingBox.Inflated(-10, -10);
-
-    public Ship(Team team, int health)
+    public Ship(Team team, int health) : base(team)
     {
         Size = new Vector2(32);
-        Team = team;
         Health = health;
     }
-    
+
+    public int Health { get; private set; }
+
     public void Shoot(BulletStats bulletStats)
     {
         World.Entities.DeferredActions.Add(() =>
@@ -26,39 +23,20 @@ public abstract class Ship : Entity
         });
     }
 
-    public void GetHitBy(Ship otherShip)
+    protected override void TakeDamageInternal()
     {
         if (HasInvulnerabilityFrames())
         {
             return;
         }
 
-        TakeDamage();
-        otherShip.TakeDamage();
-    }
-
-    private void TakeDamage()
-    {
         Health--;
-        TookDamage?.Invoke();
-    }
-
-    public event Action TookDamage;
-
-    public abstract bool HasInvulnerabilityFrames();
-
-    public void GetHitBy(Bullet bullet)
-    {
-        if (HasInvulnerabilityFrames())
-        {
-            return;
-        }
-        
-        TakeDamage();
 
         if (Health <= 0)
         {
             Destroy();
         }
     }
+
+    public abstract bool HasInvulnerabilityFrames();
 }
