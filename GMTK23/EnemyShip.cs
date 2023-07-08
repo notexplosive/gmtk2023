@@ -36,12 +36,22 @@ public class EnemyShip : Ship
 
         Destroyed += () =>
         {
-            World.Entities.AddImmediate(new SpriteVfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"), Position, 0.5f));
-            World.ScoreDoober(Position, (int)(_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
+            if (World.Bounds.Contains(Position))
+            {
+                World.Entities.AddImmediate(new SpriteVfx(Client.Assets.GetAsset<GridBasedSpriteSheet>("Explosion"),
+                    Position, 0.5f));
+                World.ScoreDoober(Position, (int) (_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
+                Global.PlaySound("gmtk23_enemy4");
+
+            }
         };
         TookDamage += () =>
         {
             DamageFlashTimer = 2f/60;
+            if (Health > 0)
+            {
+                Global.PlaySound("gmtk23_enemy3");
+            }
         };
     }
 

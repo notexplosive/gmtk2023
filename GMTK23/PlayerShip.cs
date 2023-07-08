@@ -53,6 +53,9 @@ public class PlayerShip : Ship
                                 .Add(vfx.TweenableOpacity.TweenTo(0f, 0.5f, Ease.Linear))
                         )
                 );
+            Global.PlaySound("gmtk23_explode1");
+            Global.MusicPlayer.Stop();
+            World.GameOver();
         };
     }
 

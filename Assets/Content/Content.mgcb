@@ -133,6 +133,204 @@
 /processorParam:TextureFormat=Compressed
 /build:gmtk/GameFont.spritefont
 
+#begin gmtk/gmtk23_enemy1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy1.ogg
+
+#begin gmtk/gmtk23_enemy10.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy10.ogg
+
+#begin gmtk/gmtk23_enemy11.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy11.ogg
+
+#begin gmtk/gmtk23_enemy2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy2.ogg
+
+#begin gmtk/gmtk23_enemy3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy3.ogg
+
+#begin gmtk/gmtk23_enemy4.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy4.ogg
+
+#begin gmtk/gmtk23_enemy5.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy5.ogg
+
+#begin gmtk/gmtk23_enemy6.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy6.ogg
+
+#begin gmtk/gmtk23_enemy7.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy7.ogg
+
+#begin gmtk/gmtk23_enemy8.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy8.ogg
+
+#begin gmtk/gmtk23_enemy9.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_enemy9.ogg
+
+#begin gmtk/gmtk23_explode1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_explode1.ogg
+
+#begin gmtk/gmtk23_gameover.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_gameover.ogg
+
+#begin gmtk/gmtk23_jingle1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_jingle1.ogg
+
+#begin gmtk/gmtk23_repeat1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_repeat1.ogg
+
+#begin gmtk/gmtk23_repeat2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_repeat2.ogg
+
+#begin gmtk/gmtk23_repeat3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_repeat3.ogg
+
+#begin gmtk/gmtk23_repeat4.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_repeat4.ogg
+
+#begin gmtk/gmtk23_repeat5.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_repeat5.ogg
+
+#begin gmtk/gmtk23_select1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_select1.ogg
+
+#begin gmtk/gmtk23_select2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_select2.ogg
+
+#begin gmtk/gmtk23_select3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_select3.ogg
+
+#begin gmtk/gmtk23_select4.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_select4.ogg
+
+#begin gmtk/gmtk23_select5.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_select5.ogg
+
+#begin gmtk/gmtk23_shoot1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot1.ogg
+
+#begin gmtk/gmtk23_shoot2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot2.ogg
+
+#begin gmtk/gmtk23_shoot3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot3.ogg
+
+#begin gmtk/gmtk23_shoot4.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot4.ogg
+
+#begin gmtk/gmtk23_shoot5.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot5.ogg
+
+#begin gmtk/gmtk23_shoot6.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot6.ogg
+
+#begin gmtk/gmtk23_shoot7.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot7.ogg
+
+#begin gmtk/gmtk23_shoot8.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot8.ogg
+
+#begin gmtk/gmtk23_shoot9.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_shoot9.ogg
+
 #begin gmtk/music_main.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor

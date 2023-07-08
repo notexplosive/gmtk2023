@@ -40,5 +40,10 @@ public abstract class TeamedEntity : Entity
             var bullet = World.Entities.AddImmediate(new Bullet(Team, bulletStats));
             bullet.Position = Position;
         });
+
+        if (bulletStats.Sound != null)
+        {
+            Global.PlaySound(bulletStats.Sound);
+        }
     }
 }

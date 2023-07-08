@@ -8,6 +8,8 @@ namespace GMTK23;
 
 public class World : IUpdateHook
 {
+    private int _totalScore;
+
     public World(Vector2 worldSize)
     {
         Entities = new EntityCollection(this);
@@ -62,6 +64,8 @@ public class World : IUpdateHook
 
     public void DrawOverlay(Painter painter)
     {
+        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), _totalScore.ToString(), Bounds, Alignment.TopRight, new DrawSettings());
+        
         if (IsGameOver)
         {
             painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds, Alignment.Center, new DrawSettings());
@@ -72,5 +76,6 @@ public class World : IUpdateHook
     {
         var vfx = Entities.AddImmediate(new TextVfx(score.ToString()));
         vfx.Position = position;
+        _totalScore += score;
     }
 }

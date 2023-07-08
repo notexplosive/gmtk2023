@@ -5,7 +5,7 @@ namespace GMTK23;
 
 public static class ScriptContent
 {
-    public static BulletStats PlayerBullet => new(10, 34);
+    public static BulletStats PlayerBullet => new(10, 34, "gmtk23_shoot1");
 
     public static BulletStats NoBullet => new(1, 35);
     public static BulletStats BasicEnemyBullet => new(3, 35);
@@ -156,6 +156,7 @@ public static class ScriptContent
 
             // forward (fast)
             ship.MoveLinear(new Vector2(worldBounds.Left, worldBounds.Bottom - forwardStep), 0.05f);
+            ship.PlaySound("gmtk23_repeat1");
 
             // across
             ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.5f);
@@ -163,6 +164,8 @@ public static class ScriptContent
 
             // forward (fast)
             ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.05f);
+            ship.PlaySound("gmtk23_repeat1");
+
         }
 
         return wave;

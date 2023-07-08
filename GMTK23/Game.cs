@@ -149,11 +149,6 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             ActiveTween.Clear();
         }
 
-        if (_player.IsDead && !World.IsGameOver)
-        {
-            World.GameOver();
-        }
-
         // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
         //
         // var foundCells = new HashSet<HeatmapCell>();
