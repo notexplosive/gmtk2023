@@ -6,6 +6,7 @@ using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Input;
 using ExplogineMonoGame.Rails;
+using ExTween;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -37,6 +38,8 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(windowRect.Size.X / 2, 50);
     }
+
+    public MultiplexTween ActiveTween { get; } = new();
 
     public void Draw(Painter painter)
     {
@@ -77,7 +80,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     public void Update(float dt)
     {
         _scrollingCamera.CenterPosition += new Vector2(0, dt * 60);
-        
+
+        ActiveTween.Update(dt);
+
+        if (ActiveTween.IsDone())
+        {
+            ActiveTween.Clear();
+        }
+
         // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
         //
         // var foundCells = new HashSet<HeatmapCell>();

@@ -8,7 +8,7 @@ public class Summon
     private readonly Game _game;
     private readonly SummonStats _summonStats;
     public float Cooldown { get; }
-    private List<ShipSpawn> _shipSpawns = new();
+    private readonly List<MainChoreoid> _choreiods = new();
 
     public Summon(Game game, SummonStats summonStats)
     {
@@ -19,16 +19,23 @@ public class Summon
 
     public void Execute()
     {
-        foreach (var spawn in _shipSpawns)
+        foreach (var choreoid in _choreiods)
         {
-            var enemyShip = _game.World.Entities.AddImmediate(new EnemyShip(spawn.Stats));
-            enemyShip.Position = spawn.Position;
+            _game.ActiveTween.AddChannel(choreoid.GenerateTween());
         }
     }
 
-    public void SpawnShipAt(ShipStats stats, Vector2 vector2)
+    public void SpawnShipAt(ShipStats stats, Vector2 position, ShipChoreoid shipChoreoid)
     {
-        _shipSpawns.Add(new ShipSpawn(stats,vector2));
+        var enemyShip = _game.World.Entities.AddImmediate(new EnemyShip(stats, shipChoreoid));
+        enemyShip.Position = position;
+    }
+
+    public MainChoreoid AddChoreoid(ShipStats stats)
+    {
+        var choreoid = new MainChoreoid(this, stats);
+        _choreiods.Add(choreoid);
+        return choreoid;
     }
 }
 
