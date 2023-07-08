@@ -11,7 +11,7 @@ public static class ScriptContent
     public static BulletStats BasicEnemyBullet => new(3, 35);
     public static BulletStats Stinger => new(5, 36);
     public static ShipStats BasicEnemy => new(1, 2, 3, new Vector2(10), ScriptContent.BasicEnemyBullet, 1f);
-    public static ShipStats Beatle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
+    public static ShipStats Beetle => new(2, 20, 1, new Vector2(10), ScriptContent.Stinger, 1f);
 
     public static IEnumerable<Wave> Summons(Game game)
     {
@@ -28,7 +28,7 @@ public static class ScriptContent
         
         var wave = new Wave(game, new WaveStats(5f));
         
-        var main = wave.AddChoreoid(ScriptContent.Beatle);
+        var main = wave.AddChoreoid(ScriptContent.Beetle);
 
         var ship = main.AddSpawnEvent(new Vector2(center, worldBounds.Bottom))
             .AddMoveToFastX(new Vector2(center, center), 0.5f)
