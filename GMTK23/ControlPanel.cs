@@ -7,22 +7,22 @@ using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook
+public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHook
 {
     private readonly RectangleF _windowRectangle;
-    private readonly List<PanelButton> _buttons;
+    private readonly List<ControlPanelButton> _buttons;
 
     public ControlPanel(RectangleF windowRectangle, List<Summon> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
     {
         _windowRectangle = windowRectangle;
-        _buttons = new List<PanelButton>();
+        _buttons = new List<ControlPanelButton>();
 
         var size = new Vector2(79, 43);
         var rect = new RectangleF(Vector2.Zero, size);
 
         foreach (var summon in summons)
         {
-            _buttons.Add(new PanelButton(rect, summon));
+            _buttons.Add(new ControlPanelButton(rect, summon));
             rect = NextRect(rect, size, 4, _windowRectangle.MovedToZero());
         }
     }
@@ -62,5 +62,13 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook
         }
         painter.EndSpriteBatch();
         Client.Graphics.PopCanvas();
+    }
+
+    public void Update(float dt)
+    {
+        foreach (var button in _buttons)
+        {
+            button.Update(dt);
+        }
     }
 }
