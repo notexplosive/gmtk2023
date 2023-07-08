@@ -19,6 +19,7 @@ public class World : IUpdateHook
         var ships = Entities.OfType<Ship>().ToList();
         var friendlyShips = ships.Where(ship => ship.Team == Team.Player).ToList();
         var enemyShips = ships.Where(ship => ship.Team == Team.Enemy).ToList();
+        var enemyShipsTypeSafe = enemyShips.OfType<EnemyShip>().ToList();
 
         foreach (var bullet in bullets)
         {
@@ -26,11 +27,22 @@ public class World : IUpdateHook
 
             foreach (var ship in affectedShips)
             {
-                if (RectangleF.Intersect(bullet.BoundingBox, ship.BoundingBox).Area > 0)
+                if (bullet.BoundingBox.Overlaps(ship.BoundingBox))
                 {
                     bullet.Destroy();
                     ship.GetHitBy(bullet);
                     break;
+                }
+            }
+        }
+
+        foreach (var enemyShip in enemyShipsTypeSafe)
+        {
+            foreach (var friendlyShip in friendlyShips)
+            {
+                if (enemyShip.DealDamageBox.Overlaps(friendlyShip.BoundingBox))
+                {
+                    friendlyShip.GetHitBy(enemyShip);
                 }
             }
         }

@@ -11,15 +11,26 @@ namespace GMTK23;
 
 public class PlayerShip : Ship
 {
-    public Heatmap Heatmap { get; private set; }
     private readonly PlayerPersonality _personality;
     private readonly float _speed = 5f;
     private float _gunCooldownTimer;
     private InputState _inputState = new();
+    private float _invulnerableTimer;
+    private bool _invisibleToggle;
 
-    public PlayerShip(PlayerPersonality personality) : base(Team.Player, 1)
+    public PlayerShip(PlayerPersonality personality) : base(Team.Player, 5)
     {
         _personality = personality;
+        TookDamage += OnTookDamage;
+    }
+
+    public Heatmap Heatmap { get; private set; }
+
+    public Vector2 TargetPosition { get; set; }
+
+    private void OnTookDamage()
+    {
+        _invulnerableTimer = 1f;
     }
 
     public override void Awake()
@@ -27,31 +38,44 @@ public class PlayerShip : Ship
         Heatmap = new Heatmap(World.Bounds.Size, 10);
     }
 
-    public Vector2 TargetPosition { get; set; }
-
     public override void Draw(Painter painter)
     {
-        Global.ShipsSheet.DrawFrameAtPosition(painter, 0, Position, Scale2D.One,
-            new DrawSettings {Flip = new XyBool(false, true), Origin = DrawOrigin.Center, Depth = RenderDepth});
-
         if (Client.Debug.IsActive)
         {
             Heatmap.DebugDraw(painter);
         }
+
+        
+        
+        if (_invulnerableTimer > 0)
+        {
+            _invisibleToggle = !_invisibleToggle;
+
+            if (_invisibleToggle)
+            {
+                return;
+            }
+        }
+        
+
+        Global.ShipsSheet.DrawFrameAtPosition(painter, 0, Position, Scale2D.One,
+            new DrawSettings {Flip = new XyBool(false, true), Origin = DrawOrigin.Center, Depth = RenderDepth});
     }
 
     public override void Update(float dt)
     {
+        _invulnerableTimer -= dt;
         Heatmap.Update(dt);
 
         Heatmap.Zonify(_personality.PreferredZone(World.Bounds.Size), dt);
-        
+
         foreach (var enemy in Enemies)
         {
-            Heatmap.Zonify(enemy.BoundingBox.Inflated(10, 40).Moved(new Vector2(0,-30)), -dt);
+            Heatmap.Zonify(enemy.BoundingBox.Inflated(10, 40).Moved(new Vector2(0, -30)), -dt);
 
             var desiredZone = enemy.BoundingBox.Inflated(-5, 0);
-            Heatmap.Zonify(RectangleF.FromCorners(new Vector2(desiredZone.X, 0), desiredZone.BottomRight), dt * Heatmap.CoolingIncrement);
+            Heatmap.Zonify(RectangleF.FromCorners(new Vector2(desiredZone.X, 0), desiredZone.BottomRight),
+                dt * Heatmap.CoolingIncrement);
         }
 
         _gunCooldownTimer -= dt;
@@ -67,7 +91,7 @@ public class PlayerShip : Ship
         if (movementReacted)
         {
             var cellsWithinHitBox = Heatmap.GetCellsWithin(BoundingBox).ToList();
-            if (cellsWithinHitBox.Any(a=> a.AvoidScore > 0))
+            if (cellsWithinHitBox.Any(a => a.AvoidScore > 0))
             {
                 _inputState = MoveAwayFromBad();
             }
@@ -76,7 +100,7 @@ public class PlayerShip : Ship
                 _inputState = MoveTowardDesired();
             }
         }
-        
+
         var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
         if (shootReacted && GunIsCooledDown())
         {
@@ -124,7 +148,7 @@ public class PlayerShip : Ship
         var winner = candidates[winnerIndex];
 
         var attempts = 10;
-        bool gaveUp = false;
+        var gaveUp = false;
         while (!CanSafelyReach(candidates[winnerIndex].Position, _personality.RiskTolerance()))
         {
             if (attempts < 0 || winnerIndex >= candidates.Count)
@@ -182,6 +206,11 @@ public class PlayerShip : Ship
     private bool GunIsCooledDown()
     {
         return _gunCooldownTimer < 0;
+    }
+
+    public override bool HasInvulnerabilityFrames()
+    {
+        return _invulnerableTimer > 0;
     }
 
     public class InputState

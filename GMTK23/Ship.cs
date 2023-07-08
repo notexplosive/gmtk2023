@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using ExplogineMonoGame.Data;
+using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
@@ -23,9 +25,35 @@ public abstract class Ship : Entity
         });
     }
 
-    public void GetHitBy(Bullet bullet)
+    public void GetHitBy(Ship otherShip)
+    {
+        if (HasInvulnerabilityFrames())
+        {
+            return;
+        }
+
+        TakeDamage();
+        otherShip.TakeDamage();
+    }
+
+    private void TakeDamage()
     {
         Health--;
+        TookDamage?.Invoke();
+    }
+
+    public event Action TookDamage;
+
+    public abstract bool HasInvulnerabilityFrames();
+
+    public void GetHitBy(Bullet bullet)
+    {
+        if (HasInvulnerabilityFrames())
+        {
+            return;
+        }
+        
+        TakeDamage();
 
         if (Health <= 0)
         {

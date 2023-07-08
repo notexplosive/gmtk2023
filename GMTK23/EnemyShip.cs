@@ -1,5 +1,4 @@
-﻿using ExplogineCore.Data;
-using ExplogineMonoGame;
+﻿using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
 
@@ -15,16 +14,29 @@ public class EnemyShip : Ship
         _frame = frame;
         _shipStats = shipStats;
     }
-    
+
+    public RectangleF DealDamageBox =>
+        RectangleF.InflateFrom(Position, _shipStats.DealDamageAreaSize.X, _shipStats.DealDamageAreaSize.Y);
+
     public override void Draw(Painter painter)
     {
+        if (Client.Debug.IsActive)
+        {
+            painter.DrawRectangle(DealDamageBox, new DrawSettings{Color = Color.Red});
+        }
+        
         Global.ShipsSheet.DrawFrameAtPosition(painter, _frame, Position, Scale2D.One,
             new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
     }
 
     public override void Update(float dt)
     {
-        Position += new Vector2(0, - 80 * dt);
+        Position += new Vector2(0, -80 * dt);
         DestroyIfOutOfBounds();
+    }
+
+    public override bool HasInvulnerabilityFrames()
+    {
+        return false;
     }
 }
