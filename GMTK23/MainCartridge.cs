@@ -26,12 +26,6 @@ public class MainCartridge : BasicGameCartridge
     public MainCartridge(IRuntime runtime) : base(runtime)
     {
         _layout = new GameLayout();
-
-        for (int i = 1; i < 100; i++)
-        {
-            var possibleResolution = new Point(16, 9).Multiplied(i);
-            Client.Debug.Log(possibleResolution);
-        }
     }
 
     public override CartridgeConfig CartridgeConfig { get; } =
@@ -42,7 +36,10 @@ public class MainCartridge : BasicGameCartridge
         _layout.Compute(CartridgeConfig.RenderResolution!.Value);
 
         _rail = new Rail();
-        _rail.Add(new Game(_layout.Game));
+        var game = new Game(_layout.Game);
+        _rail.Add(game);
+        _rail.Add(game.World);
+        _rail.Add(game.World.Entities);
     }
 
     public override void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)

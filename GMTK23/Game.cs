@@ -2,19 +2,22 @@
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
+using ExplogineMonoGame.Input;
 using ExplogineMonoGame.Rails;
 using Microsoft.Xna.Framework;
-using Camera = ExplogineMonoGame.Camera;
 
 namespace GMTK23;
 
-public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
+public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 {
     private readonly Camera _camera;
     private readonly Canvas _canvas;
-    private readonly RectangleF _windowRect;
+    private readonly HoverState _hoverState = new();
     private readonly Camera _scrollingCamera;
-    private readonly EntityCollection _entities = new();
+    private readonly RectangleF _windowRect;
+
+    public readonly World World;
+    private readonly PlayerShip _player;
 
     public Game(RectangleF windowRect)
     {
@@ -25,9 +28,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
         var cameraRect = new RectangleF(Vector2.Zero, renderResolution.ToVector2());
         _camera = new Camera(cameraRect, renderResolution);
         _scrollingCamera = new Camera(cameraRect, renderResolution);
-        
-        var player = _entities.AddImmediate(new PlayerShip());
-        player.Position = new Vector2(windowRect.Size.X / 2, 50);
+
+        World = new World(_windowRect.Size);
+        _player = new PlayerShip(new PlayerPersonality()); 
+        World.Entities.AddImmediate(_player);
+        _player.Position = new Vector2(windowRect.Size.X / 2, 50);
     }
 
     public void Draw(Painter painter)
@@ -52,11 +57,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
         // draw entities
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
 
-        foreach (var entity in _entities)
+        foreach (var entity in World.Entities)
         {
             entity.Draw(painter);
         }
-        
+
         painter.EndSpriteBatch();
 
         // draw effects
@@ -69,5 +74,35 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook
     public void Update(float dt)
     {
         _scrollingCamera.CenterPosition += new Vector2(0, dt * 60);
+    }
+
+    public void UpdateInput(ConsumableInput input, HitTestStack parentHitTestStack)
+    {
+        if (!Client.Debug.IsPassiveOrActive)
+        {
+            return;
+        }
+
+        var hitTestStack = parentHitTestStack.AddLayer(
+            _windowRect.CanvasToScreen(_windowRect.Size.ToPoint()) * _camera.ScreenToCanvas, Depth.Middle, _windowRect);
+
+        hitTestStack.AddInfiniteZone(Depth.Middle, _hoverState);
+        var mousePos = input.Mouse.Position(hitTestStack.WorldMatrix);
+        if (_hoverState)
+        {
+            if (input.Mouse.GetButton(MouseButton.Left).WasPressed)
+            {
+                World.Entities.DeferredActions.Add(() =>
+                {
+                    var ent = World.Entities.AddImmediate(new EnemyShip(1));
+                    ent.Position = mousePos;
+                });
+            }
+
+            if (input.Mouse.GetButton(MouseButton.Right).WasPressed)
+            {
+                _player.TargetPosition = mousePos;
+            }
+        }
     }
 }
