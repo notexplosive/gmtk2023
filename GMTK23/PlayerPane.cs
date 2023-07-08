@@ -24,7 +24,6 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
         var playerPane = Client.Assets.GetAsset<SpriteSheet>("PlayerPane");
             
         playerPane.DrawFrameAtPosition(painter, 0, Vector2.Zero, Scale2D.One, new DrawSettings{Depth = Depth.Back - 100});
-        playerPane.DrawFrameAtPosition(painter, 1, new Vector2(0,MathF.Sin(_time * 10) * 2), Scale2D.One, new DrawSettings{Depth = Depth.Middle});
         var foreground = Depth.Middle - 100;
         playerPane.DrawFrameAtPosition(painter, 2, Vector2.Zero, Scale2D.One, new DrawSettings{Depth = foreground});
 

@@ -9,6 +9,7 @@ using ExplogineMonoGame.Rails;
 using ExTween;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GMTK23;
 
@@ -118,7 +119,17 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         }
         
         painter.EndSpriteBatch();
+        
+        // draw overlay
+        painter.BeginSpriteBatch(_camera.CanvasToScreen);
+
+        World.DrawOverlay(painter);
+        
+        painter.EndSpriteBatch();
+        
+        
         Client.Graphics.PopCanvas();
+        
     }
 
     public void Update(float dt)
@@ -136,6 +147,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         if (ActiveTween.IsDone())
         {
             ActiveTween.Clear();
+        }
+
+        if (_player.IsDead && !World.IsGameOver)
+        {
+            World.GameOver();
         }
 
         // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
@@ -160,6 +176,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             return;
         }
 
+        if (input.Keyboard.GetButton(Keys.Q).WasPressed)
+        {
+            _player.Destroy();
+        }
+        
         var hitTestStack = parentHitTestStack.AddLayer(
             _windowRect.CanvasToScreen(_windowRect.Size.ToPoint()) * _camera.ScreenToCanvas, Depth.Middle, _windowRect);
 

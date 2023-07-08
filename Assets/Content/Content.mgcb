@@ -126,11 +126,21 @@
 /processorParam:TextureFormat=Color
 /build:gmtk/explosion.png
 
+#begin gmtk/GameFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:gmtk/GameFont.spritefont
+
 #begin gmtk/music_main.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:gmtk/music_main.ogg
+
+#begin gmtk/OFL.txt
+/copy:gmtk/OFL.txt
 
 #begin gmtk/player-pane.png
 /importer:TextureImporter
@@ -179,6 +189,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:gmtk/tiles.png
+
+#begin gmtk/VT323-Regular.ttf
+/copy:gmtk/VT323-Regular.ttf
 
 #begin gmtk/Whiten.fx
 /importer:EffectImporter

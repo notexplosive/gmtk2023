@@ -6,14 +6,19 @@ using Microsoft.Xna.Framework;
 
 namespace GMTK23;
 
-public class Vfx : Entity
+public abstract class Vfx : Entity
+{
+    
+}
+
+public class SpriteVfx : Vfx
 {
     private readonly SpriteSheet _spriteSheet;
     private readonly Vector2 _position;
     private readonly float _speed;
     private float _frameTime;
 
-    public Vfx(SpriteSheet spriteSheet, Vector2 position, float speed)
+    public SpriteVfx(SpriteSheet spriteSheet, Vector2 position, float speed)
     {
         _spriteSheet = spriteSheet;
         _position = position;

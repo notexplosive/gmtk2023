@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
 using Microsoft.Xna.Framework;
@@ -13,10 +14,16 @@ public class World : IUpdateHook
         Bounds = new RectangleF(Vector2.Zero, worldSize);
     }
 
+    public EntityCollection Entities { get; }
+    public RectangleF Bounds { get; }
+
+    public bool IsGameOver { get; private set; }
+
     public void Update(float dt)
     {
         var bullets = Entities.OfType<Bullet>().ToList();
-        var shipsThatAreInBounds = Entities.OfType<TeamedEntity>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
+        var shipsThatAreInBounds =
+            Entities.OfType<TeamedEntity>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
         var friendlyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Player).ToList();
         var enemyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Enemy).ToList();
         var enemyShipsTypeSafe = enemyShips.OfType<EnemyShip>().ToList();
@@ -48,6 +55,16 @@ public class World : IUpdateHook
         }
     }
 
-    public EntityCollection Entities { get; }
-    public RectangleF Bounds { get; }
+    public void GameOver()
+    {
+        IsGameOver = true;
+    }
+
+    public void DrawOverlay(Painter painter)
+    {
+        if (IsGameOver)
+        {
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds, Alignment.Center, new DrawSettings());
+        }
+    }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
+using ExTween;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -23,6 +24,36 @@ public class PlayerShip : Ship
     {
         _personality = personality;
         TookDamage += OnTookDamage;
+
+        Destroyed += () =>
+        {
+            var vfx = World.Entities.AddImmediate(new DynamicVfx());
+            vfx.Position = Position;
+            vfx.Tween
+                .Add(
+                    new MultiplexTween()
+                        .AddChannel(
+                            new SequenceTween().Add(
+                            vfx.TweenableSize.TweenTo(
+                            new Vector2(100,100),
+                            0.7f,
+                            Ease.CubicFastSlow)
+                            )
+                                .Add(
+                                    vfx.TweenableSize.TweenTo(
+                                        new Vector2(80,80),
+                                        0.3f,
+                                        Ease.CubicSlowFast)
+                                    )
+                            )
+                        .AddChannel(vfx.TweenableAngle.TweenTo(MathF.PI * 4, 1f, Ease.Linear))
+                        .AddChannel(
+                            new SequenceTween()
+                                .Add(new WaitSecondsTween(0.5f))
+                                .Add(vfx.TweenableOpacity.TweenTo(0f, 0.5f, Ease.Linear))
+                        )
+                );
+        };
     }
 
     public Heatmap Heatmap { get; private set; } = null!;
