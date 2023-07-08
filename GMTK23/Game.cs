@@ -8,6 +8,7 @@ using ExplogineMonoGame.Input;
 using ExplogineMonoGame.Rails;
 using ExTween;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GMTK23;
 
@@ -16,12 +17,13 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private readonly Camera _camera;
     private readonly Canvas _canvas;
     private readonly HoverState _hoverState = new();
-    private readonly Camera _scrollingCamera;
     private readonly RectangleF _windowRect;
+    private RectangleF _scrollingCamera;
 
     public readonly World World;
     private readonly PlayerShip _player;
     private Vector2 _mousePos;
+    private readonly List<BackgroundObject> _backgroundSprites;
 
     public Game(RectangleF windowRect)
     {
@@ -31,12 +33,27 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
         var cameraRect = new RectangleF(Vector2.Zero, renderResolution.ToVector2());
         _camera = new Camera(cameraRect, renderResolution);
-        _scrollingCamera = new Camera(cameraRect, renderResolution);
+        _scrollingCamera = cameraRect;
 
         World = new World(_windowRect.Size);
         _player = new PlayerShip(new PlayerPersonality()); 
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(windowRect.Size.X / 2, 50);
+
+        _backgroundSprites = new List<BackgroundObject>();
+
+        var backgroundSpriteCount = 3;
+        for (int i = 0; i < backgroundSpriteCount + 1; i++)
+        {
+            var x = 420 / backgroundSpriteCount * i - 32;
+            _backgroundSprites.Add(new BackgroundObject(
+                Client.Assets.GetAsset<SpriteSheet>("BigSheet"),
+                new Vector2(
+                    x,
+                    x +  128 * Client.Random.Dirty.NextFloat()
+                    )
+                    ));
+        }
     }
 
     public MultiplexTween ActiveTween { get; } = new();
@@ -52,13 +69,25 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         Client.Graphics.PushCanvas(_canvas);
         // draw background
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
-        var backgroundTile = Client.Assets.GetTexture("gmtk/tiles");
+        var backgroundTile = Client.Assets.GetTexture("BackgroundTexture");
 
         painter.DrawAsRectangle(backgroundTile, _canvas.Size.ToRectangleF(),
             new DrawSettings
-                {SourceRectangle = new Rectangle(_scrollingCamera.TopLeftPosition.ToPoint(), _canvas.Size)});
+                {SourceRectangle = new Rectangle(_scrollingCamera.Location.ToPoint(), _canvas.Size)});
 
         painter.EndSpriteBatch();
+        
+        // draw background objects
+        
+        painter.BeginSpriteBatch(_camera.CanvasToScreen);
+
+        foreach (var sprite in _backgroundSprites)
+        {
+            sprite.Draw(painter);
+        }
+        
+        painter.EndSpriteBatch();
+
 
         // draw entities
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
@@ -79,7 +108,13 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public void Update(float dt)
     {
-        _scrollingCamera.CenterPosition += new Vector2(0, dt * 60);
+        var bgSpeed = dt * 30;
+        _scrollingCamera.Location += new Vector2(0, bgSpeed);
+        
+        foreach (var sprite in _backgroundSprites)
+        {
+            sprite.MoveUpBy(bgSpeed);
+        }
 
         ActiveTween.Update(dt);
 

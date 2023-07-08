@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ExplogineCore;
+using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Cartridges;
@@ -84,5 +85,83 @@ public class MainCartridge : BasicGameCartridge
         
         yield return new AssetLoadEvent("Player",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player"), new Point(32, 32)));
+        
+        yield return new AssetLoadEvent("BackgroundTiles",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/background-tiles"), new Point(16)));
+        
+        yield return new AssetLoadEvent("BigSheet",
+            () =>
+            {
+                var sheet = new VirtualSpriteSheet(Client.Assets.GetTexture("gmtk/big-sheet"));
+                
+                sheet.AddFrame(new Rectangle(0,0,64,64));
+                sheet.AddFrame(new Rectangle(64,0,64,64));
+                sheet.AddFrame(new Rectangle(192,0,64,64));
+                return sheet;
+            });
+
+        yield return new AssetLoadEvent("Explosion",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/explosion"), new Point(32)));
+        
+        yield return new AssetLoadEvent("BackgroundTexture",
+            () =>
+            {
+                var tileCountSize = 10;
+                var tileSize = 16;
+                var canvas = new Canvas(tileSize * tileCountSize, tileSize * tileCountSize);
+
+                Client.Graphics.PushCanvas(canvas);
+                painter.BeginSpriteBatch();
+
+                var weightedRandom = new int[]
+                {
+                    // rocks
+                    0,
+                    1,
+                    2,
+                    
+                    // grass
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                };
+
+                var sheet = Client.Assets.GetAsset<SpriteSheet>("BackgroundTiles");
+                for (int i = 0; i < tileCountSize; i++)
+                {
+                    for (int j = 0; j < tileCountSize; j++)
+                    {
+                        var frame = Client.Random.Dirty.GetRandomElement(weightedRandom);
+                        var flip = new XyBool(Client.Random.Dirty.NextBool(), false);
+                        sheet.DrawFrameAtPosition(painter, frame, new Vector2(i,j) * tileSize, Scale2D.One, new DrawSettings(){Flip = flip});
+                    }
+                }
+                
+                painter.EndSpriteBatch();
+                Client.Graphics.PopCanvas();
+                
+                return canvas.AsTextureAsset();
+            });
     }
 }
