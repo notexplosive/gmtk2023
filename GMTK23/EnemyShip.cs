@@ -24,7 +24,7 @@ public class EnemyShip : Ship
 
     public override void Update(float dt)
     {
-        Position += new Vector2(0, - 120 * dt);
+        Position += new Vector2(0, - 80 * dt);
         DestroyIfOutOfBounds();
     }
 }

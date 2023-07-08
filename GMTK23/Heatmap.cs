@@ -9,6 +9,7 @@ namespace GMTK23;
 
 public class Heatmap
 {
+    public const float CoolingIncrement = 5;
     private readonly Dictionary<Point, HeatmapCell> _cells = new();
     private readonly float _cellSize;
     private readonly Vector2 _totalBounds;
@@ -43,8 +44,17 @@ public class Heatmap
     {
         foreach (var cell in _cells.Values)
         {
-            var color = new Color(1,1 - cell.Want / 5f,1);
+            if (cell.AvoidScore == 0 && cell.DesireScore == 0)
+            {
+                continue;
+            }
             
+            var color = new Color(1,1 - cell.DesireScore / 1f,1);
+            if (cell.AvoidScore > 0)
+            {
+                color = new Color(1 - cell.AvoidScore / 1f,1,1);
+            }
+
             painter.DrawRectangle(cell.Rectangle.Inflated(-1,-1), new DrawSettings
             {
                 Color = color.WithMultipliedOpacity(0.25f)
@@ -89,6 +99,22 @@ public class Heatmap
         foreach (var cell in _cells.Values)
         {
             cell.Update(dt);
+        }
+    }
+
+    public void Zonify(RectangleF rect, float amount)
+    {
+        foreach (var cell in GetCellsWithin(rect))
+        {
+            if (amount > 0)
+            {
+                cell.DesireScore += amount;
+            }
+
+            if (amount < 0)
+            {
+                cell.AvoidScore += -amount;
+            }
         }
     }
 }
