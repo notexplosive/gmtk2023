@@ -94,7 +94,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             {
                 World.Entities.DeferredActions.Add(() =>
                 {
-                    var ent = World.Entities.AddImmediate(new EnemyShip(1));
+                    var ent = World.Entities.AddImmediate(new EnemyShip(1, new ShipStats(3)));
                     ent.Position = mousePos;
                 });
             }

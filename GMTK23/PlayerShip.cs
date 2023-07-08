@@ -17,7 +17,7 @@ public class PlayerShip : Ship
     private InputState _inputState = new();
     private PlayerState _state;
 
-    public PlayerShip(PlayerPersonality personality) : base(Team.Player)
+    public PlayerShip(PlayerPersonality personality) : base(Team.Player, 1)
     {
         _personality = personality;
         _state = IdleState.Instance;

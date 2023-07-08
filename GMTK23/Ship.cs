@@ -5,11 +5,13 @@ namespace GMTK23;
 public abstract class Ship : Entity
 {
     public Team Team { get; }
+    public int Health { get; private set; }
 
-    public Ship(Team team)
+    public Ship(Team team, int health)
     {
         Size = new Vector2(32);
         Team = team;
+        Health = health;
     }
     
     public void Shoot()
@@ -23,6 +25,11 @@ public abstract class Ship : Entity
 
     public void GetHitBy(Bullet bullet)
     {
-        Destroy();
+        Health--;
+
+        if (Health < 0)
+        {
+            Destroy();
+        }
     }
 }

@@ -8,10 +8,12 @@ namespace GMTK23;
 public class EnemyShip : Ship
 {
     private readonly int _frame;
+    private readonly ShipStats _shipStats;
 
-    public EnemyShip(int frame) : base(Team.Enemy)
+    public EnemyShip(int frame, ShipStats shipStats) : base(Team.Enemy, shipStats.Health)
     {
         _frame = frame;
+        _shipStats = shipStats;
     }
     
     public override void Draw(Painter painter)
