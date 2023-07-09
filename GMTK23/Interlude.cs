@@ -131,7 +131,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "We want that sweet spot, right in the middle.",
                 "We call that the \"Flow\" state!",
                 "Your job is to keep them in the \"Flow\" state for as long as possible.",
-                "Then we drop the Boss on them!",
+                "Then, once you fill the BOSS METER, we drop the Boss on them!",
                 "THEN you can go ham!",
                 "Gotta make our Coins somehow, right?",
                 "Speaking of! There's a Coin coming down the slot...",
@@ -238,7 +238,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "(ahem)",
                 "Thanks for playing our GMTK Game Jam entry!",
                 "This game was made in 48 Hours by NotExplosive, CreatiFish, The4thAD, and quarkimo.",
-                "The theme was \"Role Reversal\"",
+                "The theme was \"Roles Reversed\"",
                 "You can keep playing if you want!",
                 "But you've pretty much seen all the content."
             };

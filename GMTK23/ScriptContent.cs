@@ -63,6 +63,7 @@ public static class ScriptContent
         for (var i = 0; i < 10; i++)
         {
             var leftShip = leftSpawner.AddSpawnEvent(new Vector2(worldBoundsOutset.Left, worldBoundsInset.Bottom));
+            leftShip.PlaySound("gmtk23_enemy10", 0.5f);
             leftSpawner.AddWaitEvent(0.25f);
             leftShip.AddMoveToFastX(new Vector2(center, worldBoundsOutset.Bottom), 1);
             leftShips.Add(leftShip);
@@ -122,10 +123,13 @@ public static class ScriptContent
                 .AddWait(beatLength);
         }
 
+        a.PlaySound("gmtk23_repeat2", 0.25f);
         a.AddMoveToFastX(new Vector2(worldBoundsInset.Right, center), duration).AddWait(beatLength);
         b.AddMoveToFastX(new Vector2(worldBoundsInset.Left, center), duration).AddWait(beatLength);
 
+
         // Swap
+        a.PlaySound("gmtk23_repeat2", 0.25f);
         a.AddMoveToFastY(new Vector2(worldBoundsInset.Right, worldBoundsInset.Bottom), duration).AddWait(beatLength);
         b.AddMoveToFastY(new Vector2(worldBoundsInset.Left, worldBoundsInset.Bottom), duration).AddWait(beatLength);
 
@@ -135,6 +139,7 @@ public static class ScriptContent
 
         // Swap
         worldBoundsInset = worldBoundsInset.Inflated(-20, 0);
+        a.PlaySound("gmtk23_repeat2", 0.25f);
         b.AddMoveToFastX(new Vector2(worldBoundsInset.Right, center), duration).AddWait(beatLength);
         a.AddMoveToFastX(new Vector2(worldBoundsInset.Left, center), duration).AddWait(beatLength);
 
@@ -144,6 +149,7 @@ public static class ScriptContent
 
         // move back
         worldBoundsInset = worldBoundsInset.Inflated(-20, 0);
+        a.PlaySound("gmtk23_repeat2", 0.25f);
         a.AddMoveToFastY(new Vector2(worldBoundsInset.Right, worldBoundsInset.Bottom), duration).AddWait(beatLength);
         b.AddMoveToFastY(new Vector2(worldBoundsInset.Left, worldBoundsInset.Bottom), duration).AddWait(beatLength);
 
@@ -166,7 +172,7 @@ public static class ScriptContent
         var ship = main.AddSpawnEvent(new Vector2(worldBounds.Right, worldBounds.Bottom));
 
         var forwardStep = 0f;
-        for (var i = 0; i < 15; i++)
+        for (var i = 0; i < 11; i++)
         {
             // across
             ship.MoveLinear(new Vector2(worldBounds.Left, worldBounds.Bottom - forwardStep), 0.5f);
@@ -312,6 +318,7 @@ public static class ScriptContent
                 sign = -sign;
                 var randX = Client.Random.Clean.NextFloat();
                 var randY = Client.Random.Clean.NextFloat();
+                ship.PlaySound("gmtk23_enemy2", 0.25f);
                 ship.AddMoveToFastX(worldBoundsInset.TopLeft + worldBoundsInset.Size.StraightMultiply(1/2f + randX / 2 * sign, randY),
                     1f, 3);
                 ship.AddWait(0.5f);
