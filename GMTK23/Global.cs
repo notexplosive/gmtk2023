@@ -16,6 +16,7 @@ public static class Global
     
     public static SpriteSheet BigSheet =>  Client.Assets.GetAsset<SpriteSheet>("BigSheet");
     public static SpriteSheet BigSheetWithFlash =>  Client.Assets.GetAsset<SpriteSheet>("BigSheetWithFlash");
+    public static bool IsFtue { get; set; } = true;
 
     public static MusicPlayer MusicPlayer = new();
 

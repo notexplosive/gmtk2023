@@ -25,6 +25,7 @@ public class StatusScreen : Widget, IEarlyDrawHook, IUpdateHook
 
     public void EarlyDraw(Painter painter)
     {
+
         Client.Graphics.PushCanvas(Canvas);
         painter.BeginSpriteBatch();
 
@@ -39,22 +40,25 @@ public class StatusScreen : Widget, IEarlyDrawHook, IUpdateHook
             new DrawSettings
                 {Depth = Depth.Middle, Color = ColorExtensions.Lerp(Color.Orange, Color.OrangeRed, _lerpPercent)});
 
-        var text = "BOSS METER";
-
-        if (_game.World.PlayerStatistics.SpawnedBoss)
+        if (!Global.IsFtue)
         {
-            text = "COMPLETE!";
-            if (_game.World.Entities.Any(e => e is Boss))
-            {
-                text = "BOSS DEPLOYED";
-            }
-        }
+            var text = "BOSS METER";
 
-        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), text, bodyRect,
-            Alignment.Center, new DrawSettings {Depth = Depth.Middle - 500});
-        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), text,
-            bodyRect.Moved(new Vector2(2, 2)), Alignment.Center,
-            new DrawSettings {Depth = Depth.Middle - 500 + 1, Color = Color.Black});
+            if (_game.World.PlayerStatistics.SpawnedBoss)
+            {
+                text = "COMPLETE!";
+                if (_game.World.Entities.Any(e => e is Boss))
+                {
+                    text = "BOSS DEPLOYED";
+                }
+            }
+
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), text, bodyRect,
+                Alignment.Center, new DrawSettings {Depth = Depth.Middle - 500});
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), text,
+                bodyRect.Moved(new Vector2(2, 2)), Alignment.Center,
+                new DrawSettings {Depth = Depth.Middle - 500 + 1, Color = Color.Black});
+        }
 
         painter.EndSpriteBatch();
         Client.Graphics.PopCanvas();

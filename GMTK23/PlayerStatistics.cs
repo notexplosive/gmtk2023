@@ -25,6 +25,12 @@ public class PlayerStatistics
         {
             var increment = dt / Math.Max(5, 10 - Level * 2f);
 
+            if(Global.IsFtue)
+            {
+                // boss meter does not update on first time play
+                return;
+            }
+
             if (Level == 0)
             {
                 // boss meter takes twice as long to raise on level 0, player is supposed to fail on the first go

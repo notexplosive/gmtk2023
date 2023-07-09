@@ -29,6 +29,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private Rail _rail;
     public int Level { get; private set; }
     private readonly List<PlayerPersonality> _playerPersonalities;
+    public PlayerPersonality Persona { get; private set; } = null!;
 
     public Game(MainCartridge mainCartridge,RectangleF windowRect)
     {
@@ -75,7 +76,8 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         _rail = new Rail();
         Global.MusicPlayer.Play();
         World = new World(_windowRect.Size, Level);
-        _player = new PlayerShip(_playerPersonalities[Level % _playerPersonalities.Count]);
+        Persona = _playerPersonalities[Level % _playerPersonalities.Count];
+        _player = new PlayerShip(Persona);
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(_windowRect.Size.X / 2, -100);
 
@@ -102,6 +104,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         
         World.OnGameOver += (playerStats)=>
         {
+            Global.IsFtue = false;
             _mainCartridge.SwitchToInterlude(playerStats);
 
             if (playerStats.SpawnedBoss)
