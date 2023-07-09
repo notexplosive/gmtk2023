@@ -18,6 +18,7 @@ public class EnemyShip : Ship
     private readonly float _speed;
     private float _bulletCooldownTimer;
     private bool _isFirst = true;
+    private float _lifeTime;
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
@@ -27,6 +28,8 @@ public class EnemyShip : Ship
         _shipChoreoid = shipChoreoid;
         _bulletCooldownTimer = shipStats.BulletStats.Cooldown * Client.Random.Clean.NextFloat();
         _doesNotShoot = _shipStats.BulletStats.Speed == 0;
+
+        _lifeTime = 0;
         
         Destroyed += () =>
         {
@@ -120,8 +123,13 @@ public class EnemyShip : Ship
             
             _isFirst = false;
             World.PlayerStatistics.Intensity += 1;
-            
-            
+        }
+
+        _lifeTime += dt;
+
+        if (_lifeTime > 20 && !World.Bounds.Inflated(32, 32).Contains(Position))
+        {
+            Destroy();
         }
         
         DamageFlashTimer -= dt;

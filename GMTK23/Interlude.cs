@@ -126,15 +126,13 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "You must be the new recruit!",
                 "Welcome to the Pest Control Arcade Cabinet SKU 4322156-A.",
                 "I know it's your first day but...",
-                "You can't just go killing The Player like that.",
-                "It's all about finding that balance.",
-                "Too hard and the game is stressful...",
-                "Too easy and the game is boring...",
+                "We're not here to kill The Player, were here to put on a good game!",
+                "If it's too hard, it's stressful. If it's too easy, it's boring.",
                 "We want that sweet spot, right in the middle.",
                 "We call that the \"Flow\" state!",
                 "Your job is to keep them in the \"Flow\" state for as long as possible.",
                 "Then we drop the Boss on them!",
-                "Now THAT's when you start rolling out the big guns, like you did just now.",
+                "THEN you can go ham!",
                 "Gotta make our Coins somehow, right?",
                 "Speaking of! There's a Coin coming down the slot...",
                 "Showtime!"
@@ -145,12 +143,20 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
         {
             return new[]
             {
-                "Hey, just so you know...",
                 "This is a different Player than last time.",
                 "Not every Player will play the same way...",
                 "Or respond to the same way to enemies.",
                 "You gotta tailor the experience to The Player in front of you.",
                 "Go get 'em champ!",
+            };
+        }
+
+        if (level == 4)
+        {
+            return new[]
+            {
+                "See what I mean?",
+                "Its as if he doesn't even realize the bullets are there.",
             };
         }
 
@@ -179,7 +185,9 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "Way to go, rookie!",
                 "I think you got it figured out, but just to review...",
                 "Keep the player in the Flow state until the boss comes out.",
-                "Then slam 'em with everything you got!"
+                "Then slam 'em with everything you got!",
+                "Another Player's coming up to the machine.",
+                "You're up!"
             };
         }
         
@@ -188,7 +196,8 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
             return new[]
             {
                 "Way to go!",
-                "Keep it up kid."
+                "Looks like a third one is coming.",
+                "Remember, each Player is different, pay attention to their play-style and skill level!"
             };
         }
         
@@ -196,17 +205,30 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
         {
             return new[]
             {
-                "Hey, fun fact!",
-                "You know how The Player's avatar is at the top of the screen?",
-                "The Player actually sees the opposite, they're at the bottom of the screen and you're sending enemies down to them.",
-                "You're seeing the whole game upside-down! Isn't that crazy!",
-                "You might be thinking \"Then why can I still read \'Game Over\' and other text on screen.\"",
+                "Would you like to hear a fun fact?",
+                "You're seeing the whole game upside-down!",
+                "The Player sees themself at the bottom of the screen, you're sending enemies DOWN to them.",
+                "Isn't that crazy!",
+                "You might be thinking \"Why can I still read the text on screen.\"",
                 "....",
                 "I... don't know.",
             };
         }
-        
+
         if (level == 3)
+        {
+            return new[]
+            {
+                "Nice work!",
+                "Next up is... oh no.",
+                "Look uh, this next Player...",
+                "He's a regular.",
+                "But unlike most of our regulars, he's not like... good at the game?",
+                "You'll see."
+            };
+        }
+
+        if (level == 4)
         {
             // END OF GAME MESSAGE
             return new[]
@@ -216,7 +238,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "(ahem)",
                 "Thanks for playing our GMTK Game Jam entry!",
                 "This game was made in 48 Hours by NotExplosive, CreatiFish, The4thAD, and quarkimo.",
-                "The theme was \"You Are The Dun--\" I mean \"Role Reversal\"",
+                "The theme was \"Role Reversal\"",
                 "You can keep playing if you want!",
                 "But you've pretty much seen all the content."
             };
@@ -231,6 +253,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
     public void BecomeReady()
     {
         _isReady = true;
+        _offset = 10;
         PageSound();
     }
 

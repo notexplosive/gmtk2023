@@ -243,13 +243,6 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             World.PlayerStatistics.BossMeter += 0.1f;
         }
 
-        if (input.Keyboard.GetButton(Keys.W).WasPressed)
-        {
-            var boss = World.Entities.AddImmediate(new Boss());
-
-            boss.Position = new Vector2(420) / 2;
-        }
-
         if (input.Keyboard.GetButton(Keys.Q).WasPressed)
         {
             _player.Destroy();

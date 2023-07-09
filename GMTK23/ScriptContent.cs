@@ -174,7 +174,7 @@ public static class ScriptContent
 
             // forward (fast)
             ship.MoveLinear(new Vector2(worldBounds.Left, worldBounds.Bottom - forwardStep), 0.05f);
-            ship.PlaySound("gmtk23_repeat1");
+            ship.PlaySound("gmtk23_repeat1", 0.5f);
 
             // across
             ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.5f);
@@ -182,7 +182,7 @@ public static class ScriptContent
 
             // forward (fast)
             ship.MoveLinear(new Vector2(worldBounds.Right, worldBounds.Bottom - forwardStep), 0.05f);
-            ship.PlaySound("gmtk23_repeat1");
+            ship.PlaySound("gmtk23_repeat1", 0.5f);
         }
 
         return wave;
@@ -330,15 +330,6 @@ public static class ScriptContent
 
         yield return new PlayerPersonality
         {
-            // aggressive idiot
-            RiskTolerance = 1f,
-            ComfortZone = new RectangleF(Vector2.Zero, new Vector2(420, 420)),
-            ShootReactionSkillPercent = 1f,
-            FearOfBulletsPercent = 0.1f
-        };
-
-        yield return new PlayerPersonality
-        {
             RiskTolerance = 0.2f,
             ComfortZone = new RectangleF(Vector2.Zero, new Vector2(420, 420)),
             ShootReactionSkillPercent = 0.5f,
@@ -351,6 +342,15 @@ public static class ScriptContent
             ComfortZone = RectangleF.FromCorners(new Vector2(0, 100), new Vector2(420, 110)),
             ShootReactionSkillPercent = 0.1f,
             FearOfBulletsPercent = 1f
+        };
+        
+        yield return new PlayerPersonality
+        {
+            // aggressive idiot
+            RiskTolerance = 1f,
+            ComfortZone = new RectangleF(Vector2.Zero, new Vector2(420, 420)),
+            ShootReactionSkillPercent = 1f,
+            FearOfBulletsPercent = 0.1f
         };
     }
 }

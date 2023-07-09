@@ -27,9 +27,19 @@ public class ShipChoreoid : IChoreoid
         Add((ship, x, y) => new CallbackTween(callback));
     }
 
-    public void PlaySound(string soundName)
+    public void PlaySound(string soundName, float? volume = null)
     {
-        AddCallback(() => Global.PlaySound(soundName));
+        AddCallback(() =>
+        {
+            if (volume.HasValue)
+            {
+                Global.PlaySound(soundName,volume.Value);
+            }
+            else
+            {
+                Global.PlaySound(soundName);
+            }
+        });
     }
 
     public ShipChoreoid AddMoveTo(Vector2 target, float duration, Ease.Delegate easeFunction)

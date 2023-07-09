@@ -75,7 +75,9 @@ public class MusicPlayer
         _tween.Add(new CallbackTween(() => Global.PlaySound("gmtk23_levelcomplete")));
         // wait for jingle to be over
         _tween.Add(new WaitSecondsTween(4));
-        // _tween.Add(new CallbackTween(() => Global.PlaySound("gmtk23_enemy3")));
+        _tween.Add(new CallbackTween(() => Global.PlaySound("gmtk23_enemy8", 1f)));
+        // pause for (evil) laugh
+        _tween.Add(new WaitSecondsTween(1.5f));
         _tween.Add(
             _bossTrackVolumeTweenable.TweenTo(1, fadeDuration, Ease.Linear)
         );

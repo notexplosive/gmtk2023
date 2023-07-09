@@ -1,4 +1,5 @@
-﻿using ExplogineCore.Data;
+﻿using System.Linq;
+using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
@@ -42,7 +43,11 @@ public class StatusScreen : Widget, IEarlyDrawHook, IUpdateHook
 
         if (_game.World.PlayerStatistics.SpawnedBoss)
         {
-            text = "BOSS DEPLOYED";
+            text = "COMPLETE!";
+            if (_game.World.Entities.Any(e => e is Boss))
+            {
+                text = "BOSS DEPLOYED";
+            }
         }
 
         painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), text, bodyRect,
