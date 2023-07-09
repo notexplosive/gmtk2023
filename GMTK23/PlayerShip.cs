@@ -20,11 +20,14 @@ public class PlayerShip : Ship
     private bool _invisibleToggle;
     private float _invulnerableTimer;
     private bool _shouldAnimate;
+    private PowerUpType? _currentPowerUp;
 
     public PlayerShip(PlayerPersonality personality) : base(Team.Player, 5)
     {
         _personality = personality;
         TookDamage += OnTookDamage;
+
+        _currentPowerUp = PowerUpType.HomingShot;
 
         Destroyed += () =>
         {
@@ -140,6 +143,11 @@ public class PlayerShip : Ship
                 dt * Heatmap.CoolingIncrement);
         }
 
+        foreach (var powerUp in PowerUps)
+        {
+            Heatmap.Zonify(powerUp.BoundingBox.Inflated(10,10), dt * 20);
+        }
+
         foreach (var bullet in Bullets)
         {
             if (bullet.Team == Team.Enemy)
@@ -180,8 +188,27 @@ public class PlayerShip : Ship
             var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
             if (shootReacted && GunIsCooledDown())
             {
-                _gunCooldownTimer = 0.1f;
-                Shoot(ScriptContent.PlayerBullet);
+                var bulletStats = ScriptContent.PlayerBullet;
+
+                if (_currentPowerUp == PowerUpType.HomingShot)
+                {
+                    bulletStats = ScriptContent.PlayerBulletHoming;
+                }
+                
+                if (_currentPowerUp == PowerUpType.PiercingShot)
+                {
+                    bulletStats = ScriptContent.PlayerBulletPiercing;
+                }
+
+                Shoot(bulletStats, Vector2.Zero);
+
+                if (_currentPowerUp == PowerUpType.TripleShot)
+                {
+                    Shoot(ScriptContent.PlayerBullet, new Vector2(20, 0));
+                    Shoot(ScriptContent.PlayerBullet, new Vector2(-20, 0));
+                }
+
+                _gunCooldownTimer = bulletStats.Cooldown;
                 _shouldAnimate = true;
             }
         }
@@ -315,5 +342,12 @@ public class PlayerShip : Ship
 
             return vec;
         }
+    }
+    
+    public void Equip(PowerUpType type)
+    {
+        _currentPowerUp = type;
+        Global.PlaySound("gmtk23_select2");
+        World.TextDoober(Position,"Power Up!");
     }
 }

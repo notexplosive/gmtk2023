@@ -2,8 +2,7 @@
 
 namespace GMTK23;
 
-public record ShipStats(int Frame, int Health, float BulletCooldown, Vector2 DealDamageAreaSize,
+public record ShipStats(int Frame, int Health, Vector2 DealDamageAreaSize,
     BulletStats BulletStats, float Speed, TailStats? Tail = null);
 
-public record TailStats(int Frame, int NumberOfSegments, float BulletCooldown, BulletStats BulletStats,
-    int DelayFrames);
+public record TailStats(int Frame, int NumberOfSegments, BulletStats BulletStats, int DelayFrames);

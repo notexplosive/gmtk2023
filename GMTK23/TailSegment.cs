@@ -36,7 +36,7 @@ public class TailSegment : TeamedEntity
         Position = nextSegment.Position;
         _nextPositions = new Queue<Vector2>();
 
-        _bulletCooldownTimer = Client.Random.Clean.NextFloat() * tailStats.BulletCooldown;
+        _bulletCooldownTimer = Client.Random.Clean.NextFloat() * tailStats.BulletStats.Cooldown;
     }
 
     public override void Draw(Painter painter)
@@ -80,7 +80,7 @@ public class TailSegment : TeamedEntity
         _bulletCooldownTimer -= dt;
         if (_bulletCooldownTimer < 0)
         {
-            _bulletCooldownTimer = _tailStats.BulletCooldown;
+            _bulletCooldownTimer = _tailStats.BulletStats.Cooldown;
             Shoot(_tailStats.BulletStats);
         }
     }

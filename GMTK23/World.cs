@@ -51,6 +51,7 @@ public class World : IUpdateHook
             Entities.OfType<TeamedEntity>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
         var friendlyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Player).ToList();
         var enemyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Enemy).ToList();
+        var powerUps = Entities.OfType<PowerUp>().ToList();
         var enemyShipsTypeSafe = enemyShips.OfType<EnemyShip>().ToList();
 
         if (enemyShips.Count == 0)
@@ -66,8 +67,8 @@ public class World : IUpdateHook
             {
                 if (bullet.DealDamageBox.Overlaps(ship.TakeDamageBox))
                 {
-                    bullet.Destroy();
-                    ship.TakeDamage();
+                    bullet.OnHitTarget();
+                    ship.TakeDamageFrom(bullet);
                     break;
                 }
             }
@@ -80,6 +81,22 @@ public class World : IUpdateHook
                 if (enemyShip.DealDamageBox.Overlaps(friendlyShip.BoundingBox))
                 {
                     friendlyShip.TakeDamage();
+                }
+            }
+        }
+
+        foreach (var powerUp in powerUps)
+        {
+            foreach (var friend in friendlyShips)
+            {
+                if (friend is PlayerShip player)
+                {
+                    if (powerUp.BoundingBox.Overlaps(player.BoundingBox))
+                    {
+                        player.Equip(powerUp.Type);
+                        powerUp.Destroy();
+                        break;
+                    }
                 }
             }
         }
@@ -129,5 +146,11 @@ public class World : IUpdateHook
         var vfx = Entities.AddImmediate(new TextVfx(score.ToString()));
         vfx.Position = position;
         _totalScore += score;
+    }
+    
+    public void TextDoober(Vector2 position, string text)
+    {
+        var vfx = Entities.AddImmediate(new TextVfx(text));
+        vfx.Position = position;
     }
 }

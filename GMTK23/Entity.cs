@@ -23,7 +23,7 @@ public abstract class Entity : IUpdateHook
     public World World { get; set; } = null!;
 
     public IEnumerable<Entity> OtherEntities => World.Entities.Where(entity => entity != this);
-    public IEnumerable<TeamedEntity> Enemies => OtherEntities.OfType<TeamedEntity>();
+    public IEnumerable<PowerUp> PowerUps => OtherEntities.OfType<PowerUp>(); 
     public IEnumerable<Bullet> Bullets => OtherEntities.OfType<Bullet>();
     public bool FlaggedAsDead { get; set; }
     public bool IsAlive => !FlaggedAsDead;
