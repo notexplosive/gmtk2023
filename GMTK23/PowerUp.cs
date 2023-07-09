@@ -16,19 +16,22 @@ public class PowerUp : Entity
 
     public override void Draw(Painter painter)
     {
+        var sheet = Global.MainSheet;
         switch (Type)
         {
             case PowerUpType.HomingShot:
             case PowerUpType.TripleShot:
             case PowerUpType.PiercingShot:
-                var sheet = Global.MainSheet;
                 sheet.DrawFrameAtPosition(painter, 5 + (int) Type, Position, Scale2D.One,
                     new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
                 break;
             case PowerUpType.Bomb:
-            // todo
+                sheet.DrawFrameAtPosition(painter, 15, Position, Scale2D.One,
+                    new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
+                break;
             case PowerUpType.Health:
-                // todo
+                sheet.DrawFrameAtPosition(painter, 14, Position, Scale2D.One,
+                    new DrawSettings {Origin = DrawOrigin.Center, Depth = RenderDepth});
                 break;
         }
     }

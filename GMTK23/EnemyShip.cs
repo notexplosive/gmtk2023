@@ -50,7 +50,7 @@ public class EnemyShip : Ship
                     World.PlayerStatistics.Intensity -= 2;
                 }
 
-                var powerUpType = Client.Random.Clean.NextInt(0, 4);
+                var powerUpType = Client.Random.Clean.NextInt(0, 6);
                 if (Client.Random.Clean.NextFloat() < 0.025)
                 {
                     var powerUp = World.Entities.AddImmediate(new PowerUp((PowerUpType) powerUpType));

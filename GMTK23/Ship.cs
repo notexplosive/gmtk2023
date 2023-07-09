@@ -10,9 +10,22 @@ public abstract class Ship : TeamedEntity
     {
         Size = new Vector2(32);
         Health = health;
+        MaxHealth = health;
     }
 
+    public int MaxHealth { get; }
+
     public int Health { get; private set; }
+
+    protected void Heal()
+    {
+        Health++;
+
+        if (Health > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+    }
 
     protected override bool TakeDamageInternal()
     {

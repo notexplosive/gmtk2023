@@ -200,6 +200,9 @@ public class PlayerShip : Ship
                             .AddChannel(vfx.TweenableSize.TweenTo(new Vector2(420) * 2, 0.5f, Ease.CubicFastSlow))
                             .AddChannel(vfx.TweenableOpacity.TweenTo(0, 0.5f, Ease.CubicFastSlow))
                     );
+
+                    // reset intensity after using bomb
+                    World.PlayerStatistics.Intensity = 0;
                 });
             }
         }
@@ -239,13 +242,15 @@ public class PlayerShip : Ship
                     bulletStats = ScriptContent.PlayerBulletPiercing;
                 }
 
-                Shoot(bulletStats, Vector2.Zero);
-
                 if (_currentPowerUp == PowerUpType.TripleShot)
                 {
-                    Shoot(ScriptContent.PlayerBullet, new Vector2(20, 0));
-                    Shoot(ScriptContent.PlayerBullet, new Vector2(-20, 0));
+                    bulletStats = ScriptContent.TripleShotBullet;
+
+                    Shoot(bulletStats, new Vector2(20, 0));
+                    Shoot(bulletStats, new Vector2(-20, 0));
                 }
+                
+                Shoot(bulletStats, Vector2.Zero);
 
                 _gunCooldownTimer = bulletStats.Cooldown;
                 _shouldAnimate = true;
@@ -366,9 +371,28 @@ public class PlayerShip : Ship
 
     public void Equip(PowerUpType type)
     {
-        _currentPowerUp = type;
-        Global.PlaySound("gmtk23_select2");
-        World.TextDoober(Position, "Power Up!");
+        if (type is PowerUpType.HomingShot or PowerUpType.PiercingShot or PowerUpType.TripleShot)
+        {
+            _currentPowerUp = type;
+            Global.PlaySound("gmtk23_select2");
+            World.TextDoober(Position, "Power Up!");
+        }
+        else if(type is PowerUpType.Bomb)
+        {
+            _bombs++;
+            if (_bombs > 3)
+            {
+                _bombs = 3;
+            }
+            Global.PlaySound("gmtk23_select4");
+            World.TextDoober(Position, "Bomb!");
+        }
+        else if(type is PowerUpType.Health)
+        {
+            Heal();
+            Global.PlaySound("gmtk23_select1");
+            World.TextDoober(Position, "Heal!");
+        }
     }
 
     public class InputState

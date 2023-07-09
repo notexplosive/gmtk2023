@@ -17,9 +17,9 @@ public class PlayerStatistics
     public float BossMeter { get; set; }
     public bool SpawnedBoss { get; set; }
 
-    public void UpdateBossMeter(float dt)
+    public void UpdateBossMeter(float dt, bool hasEnemies)
     {
-        if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f)
+        if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f &&  hasEnemies)
         {
             BossMeter += dt / 10;
         }

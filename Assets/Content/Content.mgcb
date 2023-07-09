@@ -397,6 +397,18 @@
 /processorParam:TextureFormat=Color
 /build:gmtk/player.png
 
+#begin gmtk/producer.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gmtk/producer.png
+
 #begin gmtk/sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor

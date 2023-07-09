@@ -53,7 +53,7 @@ public class MainCartridge : BasicGameCartridge
         _statusScreen = new StatusScreen(_layout.Status, _game);
         _rail.Add(_statusScreen);
 
-        _interlude = new Interlude(_layout.Interlude);
+        _interlude = new Interlude(_layout.Interlude, this);
         _rail.Add(_interlude);
     }
 
@@ -68,7 +68,7 @@ public class MainCartridge : BasicGameCartridge
         var playerPaneTweenable = new TweenableVector2(() => _playerPane.Position, val => _playerPane.Position = val);
         var statusTweenable = new TweenableVector2(() => _statusScreen.Position, val => _statusScreen.Position = val);
 
-        _interlude.InitializeWith(playerStatistics);
+        _interlude.Initialize(playerStatistics, _game.Level);
         _interlude.ResizeCanvas(_layout.Interlude.Size.ToPoint());
         _interlude.Size = _layout.Interlude.Size.ToPoint();
         var interludeTweenable = new TweenableVector2(() => _interlude.Position, val => _interlude.Position = val);
@@ -81,7 +81,8 @@ public class MainCartridge : BasicGameCartridge
             .AddChannel(statusTweenable.TweenTo(_layout.Status.Location, 1f, Ease.QuadFastSlow))
         );
         
-        _tween.Add(interludeTweenable.TweenTo(_layout.Interlude.Location, 1, Ease.Linear));
+        _tween.Add(interludeTweenable.TweenTo(_layout.Interlude.Location, 0.25f, Ease.QuadFastSlow));
+        _tween.Add(new CallbackTween(() => _interlude.BecomeReady()));
     }
 
     public void SwitchToGameplay()
@@ -98,7 +99,7 @@ public class MainCartridge : BasicGameCartridge
 
 
         _tween.Add(new CallbackTween(() => _game.Reboot()));
-        _tween.Add(interludeTweenable.TweenTo(_layout.Interlude.Location, 1, Ease.Linear));
+        _tween.Add(interludeTweenable.TweenTo(_layout.Interlude.Location, 0.25f, Ease.QuadFastSlow));
         _tween.Add(new WaitSecondsTween(0.25f));
         _tween.Add(new MultiplexTween()
             .AddChannel(playerPaneTweenable.TweenTo(_layout.Player.Location, 1f, Ease.QuadFastSlow))

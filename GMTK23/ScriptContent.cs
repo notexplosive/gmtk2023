@@ -6,6 +6,7 @@ namespace GMTK23;
 public static class ScriptContent
 {
     public static BulletStats PlayerBullet => new(10, 34, "gmtk23_shoot1");
+    public static BulletStats TripleShotBullet => new(10, 34, "gmtk23_shoot1", Cooldown: 0.3f);
     public static BulletStats PlayerBulletHoming => new(10, 34, "gmtk23_shoot2", PowerUpType.HomingShot, Cooldown: 0.3f);
     public static BulletStats PlayerBulletPiercing => new(10, 34, "gmtk23_shoot7", PowerUpType.PiercingShot);
 

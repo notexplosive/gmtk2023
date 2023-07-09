@@ -26,7 +26,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private readonly MainCartridge _mainCartridge;
     private RectangleF _windowRect;
     private Rail _rail;
-    private int _level;
+    public int Level { get; private set; }
     private List<PlayerPersonality> _playerPersonalities = new();
 
     public Game(MainCartridge mainCartridge,RectangleF windowRect)
@@ -75,7 +75,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         _rail = new Rail();
         Global.MusicPlayer.Play();
         World = new World(_windowRect.Size);
-        _player = new PlayerShip(_playerPersonalities[_level % _playerPersonalities.Count]);
+        _player = new PlayerShip(_playerPersonalities[Level % _playerPersonalities.Count]);
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(_windowRect.Size.X / 2, -100);
 
@@ -106,7 +106,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
             if (playerStats.SpawnedBoss)
             {
-                _level++;
+                Level++;
             }
         };
     }
@@ -204,6 +204,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         {
             if (!World.PlayerStatistics.SpawnedBoss)
             {
+                Global.PlaySound("gmtk23_enemy3");
                 World.PlayerStatistics.SpawnedBoss = true;
                 var boss = World.Entities.AddImmediate(new Boss());
                 boss.Position = new Vector2(420/2f,420 + 64);

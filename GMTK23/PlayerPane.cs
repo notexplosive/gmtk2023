@@ -33,7 +33,7 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
         if (_game.World.PlayerStatistics.BossMeter < 1f)
         {
             painter.DrawRectangle(bodyRect, new DrawSettings{Depth = Depth.Back});
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 16), "Focused", bodyRect,
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 16), GetStringForIntensity(_game.World.PlayerStatistics.IntensityAsBidirectionalPercent), bodyRect,
                 Alignment.TopCenter, new DrawSettings {Color = Color.Black});
             var barRect = bodyRect.Inflated(-10, -10).Moved(new Vector2(0, 10));
 
@@ -54,6 +54,37 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
         
         painter.EndSpriteBatch();
         Client.Graphics.PopCanvas();
+    }
+
+    private string GetStringForIntensity(float percent)
+    {
+        var result = "Flow";
+        if (MathF.Abs(percent) < 0.25f)
+        {
+            result= "Flow";
+        }
+
+        if (percent > 0.25f)
+        {
+            result = "Stressed";
+        }
+        
+        if (percent > 0.75f)
+        {
+            result = "Anxious";
+        }
+        
+        if (percent < -0.25f)
+        {
+            result = "Idle";
+        }
+        
+        if (percent < -0.75f)
+        {
+            result = "Bored";
+        }
+
+        return result;
     }
 
     public void Update(float dt)

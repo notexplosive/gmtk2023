@@ -47,7 +47,7 @@ public class World : IUpdateHook
             return;
         }
 
-        PlayerStatistics.UpdateBossMeter(dt);
+        PlayerStatistics.UpdateBossMeter(dt, Entities.OfType<EnemyShip>().Any());
 
         var bullets = Entities.OfType<Bullet>().ToList();
         var shipsThatAreInBounds =
