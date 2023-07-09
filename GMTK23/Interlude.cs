@@ -17,6 +17,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
     private bool _isReady;
     private HashSet<PageDescriptor> _seenText = new();
     private float _offset;
+    private int _soundIndex = 1;
 
     public Interlude(RectangleF rectangle, MainCartridge mainCartridge) : base(rectangle, Depth.Middle)
     {
@@ -145,7 +146,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
             return new[]
             {
                 "Hey, just so you know...",
-                "This is a different Player at the Cabinet.",
+                "This is a different Player than last time.",
                 "Not every Player will play the same way...",
                 "Or respond to the same way to enemies.",
                 "You gotta tailor the experience to The Player in front of you.",
@@ -196,12 +197,28 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
             return new[]
             {
                 "Hey, fun fact!",
-                "You know how The Player is at the top of the screen?",
+                "You know how The Player's avatar is at the top of the screen?",
                 "The Player actually sees the opposite, they're at the bottom of the screen and you're sending enemies down to them.",
                 "You're seeing the whole game upside-down! Isn't that crazy!",
-                "You might be thinking \"Then why can I still read \'Game Over\' and other text on screen.",
+                "You might be thinking \"Then why can I still read \'Game Over\' and other text on screen.\"",
                 "....",
                 "I... don't know.",
+            };
+        }
+        
+        if (level == 3)
+        {
+            // END OF GAME MESSAGE
+            return new[]
+            {
+                "Hey uhh...",
+                "Is it cool if I break character for a moment?",
+                "(ahem)",
+                "Thanks for playing our GMTK Game Jam entry!",
+                "This game was made in 48 Hours by NotExplosive, CreatiFish, The4thAD, and quarkimo.",
+                "The theme was \"You Are The Dun--\" I mean \"Role Reversal\"",
+                "You can keep playing if you want!",
+                "But you've pretty much seen all the content."
             };
         }
 
@@ -221,11 +238,14 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
     {
         if (IsAtEndOfPages)
         {
-            Global.PlaySound("gmtk23_select2");
+            return;
         }
-        else
+        
+        Global.PlaySound($"talk{_soundIndex}", 1f);
+        _soundIndex++;
+        if (_soundIndex > 4)
         {
-            Global.PlaySound("gmtk23_select5");
+            _soundIndex = 1;
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
@@ -27,12 +28,11 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private RectangleF _windowRect;
     private Rail _rail;
     public int Level { get; private set; }
-    private List<PlayerPersonality> _playerPersonalities = new();
+    private readonly List<PlayerPersonality> _playerPersonalities;
 
     public Game(MainCartridge mainCartridge,RectangleF windowRect)
     {
-        _playerPersonalities.Add(new PlayerPersonality());
-        _playerPersonalities.Add(new PlayerPersonality());
+        _playerPersonalities = ScriptContent.PlayerPersonalities().ToList();
         
         _mainCartridge = mainCartridge;
         _windowRect = windowRect;

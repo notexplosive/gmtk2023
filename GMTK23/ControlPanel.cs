@@ -100,8 +100,11 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
 
     public void Update(float dt)
     {
-        _idleTimer += dt;
-        
+        if (_game.World.IsStarted)
+        {
+            _idleTimer += dt;
+        }
+
         foreach (var button in _buttons)
         {
             button.Update(dt);

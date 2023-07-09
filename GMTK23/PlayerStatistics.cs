@@ -19,7 +19,7 @@ public class PlayerStatistics
 
     public void UpdateBossMeter(float dt, bool hasEnemies)
     {
-        if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f &&  hasEnemies)
+        if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f &&  hasEnemies && Health > 0)
         {
             BossMeter += dt / 10;
         }

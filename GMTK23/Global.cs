@@ -19,11 +19,11 @@ public static class Global
 
     public static MusicPlayer MusicPlayer = new();
 
-    public static void PlaySound(string soundName)
+    public static void PlaySound(string soundName, float volume = 0.35f)
     {
         var instance = Client.Assets.GetSoundEffectInstance($"gmtk/{soundName}");
         instance.Stop();
-        instance.Volume = 0.35f;
+        instance.Volume = volume;
         instance.Play();
     }
 

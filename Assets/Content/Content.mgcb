@@ -421,6 +421,30 @@
 /processorParam:TextureFormat=Color
 /build:gmtk/sheet.png
 
+#begin gmtk/talk1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/talk1.ogg
+
+#begin gmtk/talk2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/talk2.ogg
+
+#begin gmtk/talk3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/talk3.ogg
+
+#begin gmtk/talk4.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/talk4.ogg
+
 #begin gmtk/tiles.png
 /importer:TextureImporter
 /processor:TextureProcessor

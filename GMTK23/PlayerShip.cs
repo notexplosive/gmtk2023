@@ -227,7 +227,7 @@ public class PlayerShip : Ship
 
         if (Enemies.Any())
         {
-            var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent();
+            var shootReacted = Client.Random.Clean.NextFloat() < _personality.ShootReactionSkillPercent;
             if (shootReacted && GunIsCooledDown())
             {
                 var bulletStats = ScriptContent.PlayerBullet;
@@ -249,7 +249,7 @@ public class PlayerShip : Ship
                     Shoot(bulletStats, new Vector2(20, 0));
                     Shoot(bulletStats, new Vector2(-20, 0));
                 }
-                
+
                 Shoot(bulletStats, Vector2.Zero);
 
                 _gunCooldownTimer = bulletStats.Cooldown;
@@ -276,7 +276,7 @@ public class PlayerShip : Ship
     private InputState MoveTowardDesired()
     {
         var candidates = new List<HeatmapCell>();
-        foreach (var cell in Heatmap.GetCellsWithin(_personality.ComfortZone(World.Bounds.Size)))
+        foreach (var cell in Heatmap.GetCellsWithin(_personality.ComfortZone))
         {
             if (cell.AvoidScore <= 0 && cell.DesireScore > 0)
             {
@@ -305,15 +305,16 @@ public class PlayerShip : Ship
 
         var attempts = 10;
         var gaveUp = false;
-        while (!CanSafelyReach(candidates[winnerIndex].Position, _personality.RiskTolerance()))
+        while (!CanSafelyReach(candidates[winnerIndex].Position, _personality.RiskTolerance))
         {
+            winnerIndex++;
+
             if (attempts < 0 || winnerIndex >= candidates.Count)
             {
                 gaveUp = true;
                 break;
             }
 
-            winnerIndex++;
             attempts--;
         }
 
@@ -377,17 +378,18 @@ public class PlayerShip : Ship
             Global.PlaySound("gmtk23_select2");
             World.TextDoober(Position, "Power Up!");
         }
-        else if(type is PowerUpType.Bomb)
+        else if (type is PowerUpType.Bomb)
         {
             _bombs++;
             if (_bombs > 3)
             {
                 _bombs = 3;
             }
+
             Global.PlaySound("gmtk23_select4");
             World.TextDoober(Position, "Bomb!");
         }
-        else if(type is PowerUpType.Health)
+        else if (type is PowerUpType.Health)
         {
             Heal();
             Global.PlaySound("gmtk23_select1");

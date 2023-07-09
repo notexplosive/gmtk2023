@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ExplogineMonoGame.Data;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -238,6 +239,37 @@ public static class ScriptContent
             .AddWait(0.1f);
 
         return wave;
+    }
+
+    public static IEnumerable<PlayerPersonality> PlayerPersonalities()
+    {
+        
+        
+        yield return new PlayerPersonality
+        {
+            // default
+        };
+        
+        yield return new PlayerPersonality
+        {
+            RiskTolerance = 1f,
+            ComfortZone = new (Vector2.Zero, new Vector2(420, 420)),
+            ShootReactionSkillPercent = 1f
+        };
+        
+        yield return new PlayerPersonality
+        {
+            RiskTolerance = 0.2f,
+            ComfortZone = new (Vector2.Zero, new Vector2(420, 420)),
+            ShootReactionSkillPercent = 0.5f
+        };
+        
+        yield return new PlayerPersonality
+        {
+            ComfortZone = RectangleF.FromCorners(new Vector2(0,100), new Vector2(420, 110)),
+            ShootReactionSkillPercent = 0.1f
+        };
+
     }
 }
 

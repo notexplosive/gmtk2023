@@ -25,27 +25,16 @@ public class PlayerPersonality
         return 30;
     }
 
-    public float ShootReactionSkillPercent()
-    {
-        // how quick they are to react (with regard to movement)
-        return 0.30f;
-    }
+    public float ShootReactionSkillPercent { get; set; } = 0.30f;
 
-    public float RiskTolerance()
-    {
-        // how quick they are to react (with regard to movement)
-        return 0.1f;
-    }
+    public float RiskTolerance { get; set; } = 0.1f;
 
-    public RectangleF ComfortZone(Vector2 worldSize)
-    {
-        // the zone in which the player is comfortable moving around, they will only leave this zone if they do so by accident
-        // their AI only checks within the comfort zone for calculations
-        return new RectangleF(Vector2.Zero, new Vector2(worldSize.X, worldSize.Y / 3));
-    }
+    // the zone in which the player is comfortable moving around, they will only leave this zone if they do so by accident
+    // their AI only checks within the comfort zone for calculations
+    public RectangleF ComfortZone { get; set; } = new (Vector2.Zero, new Vector2(420, 420 / 3f));
 
     public RectangleF PreferredZone(Vector2 worldSize)
     {
-        return ComfortZone(worldSize).Inflated(-40, -40);
+        return ComfortZone.Inflated(-40, -40);
     }
 }
