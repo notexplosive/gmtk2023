@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Gui;
@@ -12,6 +14,8 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
     private readonly RectangleF _windowRectangle;
     private readonly Game _game;
     private readonly List<ControlPanelButton> _buttons;
+    private float _idleTimer;
+    private bool _hasDoneSomething;
 
     public ControlPanel(RectangleF windowRectangle, Game game, List<Wave> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
     {
@@ -24,8 +28,12 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
 
         foreach (var summon in summons)
         {
-            _buttons.Add(new ControlPanelButton(rect, summon));
+            var button = new ControlPanelButton(rect, summon);
+            _buttons.Add(button);
             rect = NextRect(rect, size, 4, _windowRectangle.MovedToZero());
+
+            button.WasPressed += () => _hasDoneSomething = true;
+
         }
     }
 
@@ -76,6 +84,15 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
                 new DrawSettings {Color = Color.Black.WithMultipliedOpacity(0.5f)});
         }
 
+        if (_idleTimer > 3 && !_hasDoneSomething)
+        {
+            var inflate = -Math.Abs(MathF.Sin(_idleTimer * 5f) * 5);
+            var rect = _buttons[0].Rectangle.Inflated(inflate, inflate);
+            painter.DrawLineRectangle(rect, new LineDrawSettings{Color = Color.Cyan, Thickness = 1});
+            painter.DrawStringWithinRectangle(Global.GetFont(20), "Click!", rect, Alignment.Center, new DrawSettings{Color = Color.Cyan, Depth= ExplogineCore.Data.Depth.Middle});
+            painter.DrawStringWithinRectangle(Global.GetFont(20), "Click!", rect.Moved(new Vector2(1)), Alignment.Center, new DrawSettings{Color = Color.Black, Depth = ExplogineCore.Data.Depth.Middle + 1});
+        }
+        
         painter.EndSpriteBatch();
         
         Client.Graphics.PopCanvas();
@@ -83,6 +100,8 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
 
     public void Update(float dt)
     {
+        _idleTimer += dt;
+        
         foreach (var button in _buttons)
         {
             button.Update(dt);

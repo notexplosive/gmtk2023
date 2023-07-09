@@ -12,14 +12,14 @@ namespace GMTK23;
 public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
 {
     private readonly HoverState _isHovered = new();
-    private readonly RectangleF _rectangle;
+    public RectangleF Rectangle { get; }
     private readonly Wave _wave;
     private float _cooldownTimer;
     private bool _primed;
 
     public ControlPanelButton(RectangleF rectangle, Wave wave)
     {
-        _rectangle = rectangle;
+        Rectangle = rectangle;
         _wave = wave;
     }
 
@@ -38,14 +38,14 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
 
         var percent = Math.Clamp(_cooldownTimer / _wave.Cooldown, 0, 1f);
         
-        painter.DrawAsRectangle(Client.Assets.GetTexture("gmtk/button"), _rectangle.Moved(offset), new DrawSettings{Depth = Depth.Middle});
+        painter.DrawAsRectangle(Client.Assets.GetTexture("gmtk/button"), Rectangle.Moved(offset), new DrawSettings{Depth = Depth.Middle});
 
-        Client.Assets.GetAsset<SpriteSheet>("ButtonTags").DrawFrameAtPosition(painter, _wave.Stats.TagFrame, _rectangle.Moved(offset).Center, Scale2D.One, new DrawSettings{Depth = Depth.Middle-1, Origin = DrawOrigin.Center});
+        Client.Assets.GetAsset<SpriteSheet>("ButtonTags").DrawFrameAtPosition(painter, _wave.Stats.TagFrame, Rectangle.Moved(offset).Center, Scale2D.One, new DrawSettings{Depth = Depth.Middle-1, Origin = DrawOrigin.Center});
         
         // painter.DrawAsRectangle(Client.Assets.GetTexture("gmtk/button"), _rectangle.Moved(offset), new DrawSettings{Depth = Depth.Middle});
         painter.DrawRectangle(
-            RectangleF.FromCorners(_rectangle.TopLeft,
-                Vector2Extensions.Lerp(_rectangle.BottomLeft, _rectangle.BottomRight,
+            RectangleF.FromCorners(Rectangle.TopLeft,
+                Vector2Extensions.Lerp(Rectangle.BottomLeft, Rectangle.BottomRight,
                     percent)),
             new DrawSettings {Color = Color.Black.WithMultipliedOpacity(0.5f), Depth = Depth.Middle - 1000});
     }
@@ -63,13 +63,14 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
             return;
         }
         
-        hitTestStack.AddZone(_rectangle, Depth.Middle, _isHovered);
+        hitTestStack.AddZone(Rectangle, Depth.Middle, _isHovered);
 
         if (input.Mouse.GetButton(MouseButton.Left).WasReleased)
         {
             if (_primed && _isHovered)
             {
                 _wave.Execute();
+                WasPressed?.Invoke();
                 _cooldownTimer = _wave.Cooldown;
             }
 
@@ -82,6 +83,8 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
         }
         
     }
+
+    public event Action? WasPressed;
 }
 
 public record ShipSpawn(ShipStats Stats, Vector2 Position);

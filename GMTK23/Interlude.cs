@@ -195,9 +195,13 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
         {
             return new[]
             {
-                "I think that last kid's looking for his mom.",
-                "He's probably gonna take out an advance on his allowance to get another go.",
-                "In the meantime... Coin incoming!"
+                "Hey, fun fact!",
+                "You know how The Player is at the top of the screen?",
+                "The Player actually sees the opposite, they're at the bottom of the screen and you're sending enemies down to them.",
+                "You're seeing the whole game upside-down! Isn't that crazy!",
+                "You might be thinking \"Then why can I still read \'Game Over\' and other text on screen.",
+                "....",
+                "I... don't know.",
             };
         }
 
