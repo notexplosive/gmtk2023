@@ -10,11 +10,13 @@ namespace GMTK23;
 public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHook
 {
     private readonly RectangleF _windowRectangle;
+    private readonly Game _game;
     private readonly List<ControlPanelButton> _buttons;
 
-    public ControlPanel(RectangleF windowRectangle, List<Wave> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
+    public ControlPanel(RectangleF windowRectangle, Game game, List<Wave> summons) : base(windowRectangle, ExplogineCore.Data.Depth.Middle)
     {
         _windowRectangle = windowRectangle;
+        _game = game;
         _buttons = new List<ControlPanelButton>();
 
         var size = new Vector2(79, 43);
@@ -41,6 +43,11 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
 
     public void UpdateInput(ConsumableInput input, HitTestStack parentHitTestStack)
     {
+        if (!_game.World.IsStarted)
+        {
+            return;
+        }
+        
         UpdateHovered(parentHitTestStack);
         
         var hitTestStack = parentHitTestStack.AddLayer(

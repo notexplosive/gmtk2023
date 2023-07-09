@@ -66,6 +66,7 @@ public class PlayerShip : Ship
 
     private void OnTookDamage()
     {
+        World.PlayerStatistics.Intensity += 20;
         Global.PlaySound("gmtk23_enemy4");
         Client.Debug.Log($"Took Damage {Health}");
             _invulnerableTimer = 1f;
@@ -151,13 +152,13 @@ public class PlayerShip : Ship
         }
 
         _gunCooldownTimer -= dt;
-        ExecuteInput();
+        ExecuteInput(dt);
 
         Position += _inputState.ToVector2() * _speed;
         Position = new RectangleF(Position, Vector2.Zero).ConstrainedTo(World.Bounds).Center;
     }
 
-    private void ExecuteInput()
+    private void ExecuteInput(float dt)
     {
         var movementReacted = Client.Random.Clean.NextFloat() < _personality.MovementReactionSkillPercent();
         if (movementReacted)
@@ -165,6 +166,7 @@ public class PlayerShip : Ship
             var cellsWithinHitBox = Heatmap.GetCellsWithin(BoundingBox).ToList();
             if (cellsWithinHitBox.Any(a => a.AvoidScore > 0))
             {
+                World.PlayerStatistics.Intensity += cellsWithinHitBox.Count * dt * 20;
                 _inputState = MoveAwayFromBad();
             }
             else

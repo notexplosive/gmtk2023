@@ -23,11 +23,13 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     public World World = null!;
     private Vector2 _mousePos;
     private RectangleF _scrollingCamera;
+    private readonly MainCartridge _mainCartridge;
     private RectangleF _windowRect;
     private Rail _rail;
 
-    public Game(RectangleF windowRect)
+    public Game(MainCartridge mainCartridge,RectangleF windowRect)
     {
+        _mainCartridge = mainCartridge;
         _windowRect = windowRect;
         var renderResolution = windowRect.Size.ToPoint();
         _canvas = new Canvas(renderResolution);
@@ -83,6 +85,12 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         
         _rail.Add(World);
         _rail.Add(World.Entities);
+        
+        World.OnGameOver += ()=>
+        {
+            _mainCartridge.SwitchToInterlude();
+            _mainCartridge.SwitchToGameplay();
+        };
     }
 
 

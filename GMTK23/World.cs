@@ -28,22 +28,37 @@ public class World : IUpdateHook
     public bool IsGameOver { get; private set; }
 
     public MultiplexTween ActiveTween { get; } = new();
+    public PlayerStatistics PlayerStatistics { get; set; } = new();
 
     public void Update(float dt)
     {
+        
+
         ActiveTween.Update(dt);
 
         if (ActiveTween.IsDone())
         {
             ActiveTween.Clear();
         }
-        
+
+        if (!IsStarted)
+        {
+            return;
+        }
+
+        PlayerStatistics.UpdateBossMeter(dt);
+
         var bullets = Entities.OfType<Bullet>().ToList();
         var shipsThatAreInBounds =
             Entities.OfType<TeamedEntity>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
         var friendlyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Player).ToList();
         var enemyShips = shipsThatAreInBounds.Where(ship => ship.Team == Team.Enemy).ToList();
         var enemyShipsTypeSafe = enemyShips.OfType<EnemyShip>().ToList();
+
+        if (enemyShips.Count == 0)
+        {
+            PlayerStatistics.Intensity -= dt * 10;
+        }
 
         foreach (var bullet in bullets)
         {

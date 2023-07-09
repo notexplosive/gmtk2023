@@ -7,7 +7,7 @@ namespace GMTK23;
 
 public class GameLayout
 {
-    public RectangleF Feedback { get; private set; }
+    public RectangleF Status { get; private set; }
     public RectangleF Player { get; private set; }
     public RectangleF Controls { get; private set; }
     public RectangleF Game { get; private set; }
@@ -35,7 +35,7 @@ public class GameLayout
                 Orientation.Vertical,
                 padding),
             L.FillBoth());
-        topLeft.Add(L.FillBoth(nameof(GameLayout.Feedback)));
+        topLeft.Add(L.FillBoth(nameof(GameLayout.Status)));
         topLeft.Add(L.FillBoth(nameof(GameLayout.Player)));
         top.Add(L.FixedElement(nameof(GameLayout.Game), 420, 420));
         top.Add(L.FillBoth(nameof(GameLayout.Controls)));
@@ -45,7 +45,7 @@ public class GameLayout
         Game = baked.FindElement(nameof(GameLayout.Game)).Rectangle;
         Controls = baked.FindElement(nameof(GameLayout.Controls)).Rectangle;
         Player = baked.FindElement(nameof(GameLayout.Player)).Rectangle;
-        Feedback = baked.FindElement(nameof(GameLayout.Feedback)).Rectangle;
+        Status = baked.FindElement(nameof(GameLayout.Status)).Rectangle;
         Interlude = new RectangleF(totalSize.ToVector2().JustX(), new Vector2(340, 420));
     }
 
@@ -68,7 +68,7 @@ public class GameLayout
 
         var baked = builder.Bake(totalSize);
 
-        Feedback = Feedback.Moved(new Vector2(-400, 0));
+        Status = Status.Moved(new Vector2(-400, 0));
         Player = Player.Moved(new Vector2(-400, 0));
         Game = baked.FindElement(nameof(GameLayout.Game)).Rectangle;
         Controls = Controls.Moved(new Vector2(0, -500));

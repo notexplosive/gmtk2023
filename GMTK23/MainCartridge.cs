@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ExplogineCore;
@@ -25,6 +24,7 @@ public class MainCartridge : BasicGameCartridge
     private ControlPanel _controlPanel = null!;
     private PlayerPane _playerPane = null!;
     private SequenceTween _tween = new ();
+    private StatusScreen _statusScreen;
 
     public MainCartridge(IRuntime runtime) : base(runtime)
     {
@@ -39,39 +39,41 @@ public class MainCartridge : BasicGameCartridge
         _layout.ComputeGameplay(CartridgeConfig.RenderResolution!.Value);
 
         _rail = new Rail();
-        _game = new Game(_layout.Game);
-        _game.World.OnGameOver += ()=>
-        {
-            SwitchToInterlude();
-            SwitchToGameplay();
-        };
+        _game = new Game(this,_layout.Game);
+        
         _rail.Add(_game);
 
-        _controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(_game).ToList());
+        _controlPanel = new ControlPanel(_layout.Controls, _game, ScriptContent.Summons(_game).ToList());
         _rail.Add(_controlPanel);
 
         _playerPane = new PlayerPane(_layout.Player, _game);
         _rail.Add(_playerPane);
+
+        _statusScreen = new StatusScreen(_layout.Status, _game);
+        _rail.Add(_statusScreen);
     }
 
-    private void SwitchToInterlude()
+    public void SwitchToInterlude()
     {
         var duration = 1f;
         _layout.ComputeInterlude(CartridgeConfig.RenderResolution!.Value);
 
         var gameTweenable = new TweenableVector2(() => _game.Position, val => _game.Position = val);
-        var controlPanelTweenable = new TweenableVector2(()=> _controlPanel.Position, (val)=> _controlPanel.Position = val); 
+        var controlPanelTweenable = new TweenableVector2(()=> _controlPanel.Position, (val)=> _controlPanel.Position = val);
         var playerPaneTweenable = new TweenableVector2(()=> _playerPane.Position, (val)=> _playerPane.Position = val);
+        var statusTweenable = new TweenableVector2(()=> _statusScreen.Position, (val)=> _statusScreen.Position = val);
+
 
         _tween.Add(new WaitSecondsTween(1));
         _tween.Add(new MultiplexTween()
             .AddChannel(playerPaneTweenable.TweenTo(_layout.Player.Location, 1f, Ease.QuadFastSlow))
             .AddChannel(controlPanelTweenable.TweenTo(_layout.Controls.Location, 1f, Ease.QuadFastSlow))
             .AddChannel(gameTweenable.TweenTo(_layout.Game.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(statusTweenable.TweenTo(_layout.Status.Location, 1f, Ease.QuadFastSlow))
         );
     }
-    
-    private void SwitchToGameplay()
+
+    public void SwitchToGameplay()
     {
         var duration = 1f;
         _layout.ComputeGameplay(CartridgeConfig.RenderResolution!.Value);
@@ -79,14 +81,16 @@ public class MainCartridge : BasicGameCartridge
         var gameTweenable = new TweenableVector2(() => _game.Position, val => _game.Position = val);
         var controlPanelTweenable = new TweenableVector2(()=> _controlPanel.Position, (val)=> _controlPanel.Position = val); 
         var playerPaneTweenable = new TweenableVector2(()=> _playerPane.Position, (val)=> _playerPane.Position = val);
+        var statusTweenable = new TweenableVector2(()=> _statusScreen.Position, (val)=> _statusScreen.Position = val);
 
+        _tween.Add(new CallbackTween(() => _game.Reboot()));
         _tween.Add(new WaitSecondsTween(1));
         _tween.Add(new MultiplexTween()
             .AddChannel(playerPaneTweenable.TweenTo(_layout.Player.Location, 1f, Ease.QuadFastSlow))
             .AddChannel(controlPanelTweenable.TweenTo(_layout.Controls.Location, 1f, Ease.QuadFastSlow))
             .AddChannel(gameTweenable.TweenTo(_layout.Game.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(statusTweenable.TweenTo(_layout.Status.Location, 1f, Ease.QuadFastSlow))
         );
-        _tween.Add(new CallbackTween(() => _game.Reboot()));
     }
 
     public override void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)
@@ -118,12 +122,6 @@ public class MainCartridge : BasicGameCartridge
         _rail.EarlyDraw(painter);
 
         painter.BeginSpriteBatch();
-
-        painter.DrawRectangle(_layout.Feedback, new DrawSettings());
-        // painter.DrawRectangle(_layout.Player, new DrawSettings());
-        // painter.DrawRectangle(_layout.Game, new DrawSettings());
-        // painter.DrawRectangle(_layout.Controls, new DrawSettings());
-
         _rail.Draw(painter);
         painter.EndSpriteBatch();
     }
@@ -181,7 +179,7 @@ public class MainCartridge : BasicGameCartridge
         yield return new AssetLoadEvent("BackgroundTexture",
             () =>
             {
-                var tileCountSize = 10;
+                var tileCountSize = 27;
                 var tileSize = 16;
                 var canvas = new Canvas(tileSize * tileCountSize, tileSize * tileCountSize);
 
@@ -190,11 +188,7 @@ public class MainCartridge : BasicGameCartridge
 
                 var weightedRandom = new int[]
                 {
-                    // rocks
-                    0,
-                    1,
-                    2,
-                    
+
                     // grass
                     3,
                     3,
@@ -220,6 +214,35 @@ public class MainCartridge : BasicGameCartridge
                     4,
                     5,
                     5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    3,
+                    3,
+                    4,
+                    4,
+                    5,
+                    5,
+                    
+                    // rocks
+                    0,
+                    1,
+                    2,
                 };
 
                 var sheet = Client.Assets.GetAsset<SpriteSheet>("BackgroundTiles");

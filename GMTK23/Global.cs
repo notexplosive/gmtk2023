@@ -30,7 +30,7 @@ public class MusicPlayer
         var track = Client.Assets.GetSoundEffectInstance("gmtk/music_main");
 
         track.IsLooped = true;
-        track.Volume = 0.5f;
+        track.Volume = 0.35f;
         track.Stop();
         track.Play();
     }

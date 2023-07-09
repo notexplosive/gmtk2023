@@ -42,7 +42,7 @@ public class EnemyShip : Ship
                     Position, 0.5f));
                 World.ScoreDoober(Position, (int) (_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
                 Global.PlaySound("gmtk23_enemy3");
-
+                World.PlayerStatistics.Intensity -= (_shipStats.Health * _shipStats.BulletStats.Speed) / 2f;
             }
         };
         TookDamage += () =>
