@@ -27,8 +27,6 @@ public class PlayerShip : Ship
         _personality = personality;
         TookDamage += OnTookDamage;
 
-        _currentPowerUp = PowerUpType.HomingShot;
-
         Destroyed += () =>
         {
             var vfx = World.Entities.AddImmediate(new RectVfx());

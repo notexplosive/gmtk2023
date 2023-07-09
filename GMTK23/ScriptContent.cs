@@ -37,7 +37,7 @@ public static class ScriptContent
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
         var worldBoundsInset = worldBounds.Inflated(-100, -100);
 
-        var wave = new Wave(game, new WaveStats(10f));
+        var wave = new Wave(game, new WaveStats(10f,2));
         var leftSpawner = wave.AddChoreoid(ScriptContent.SmallCricket);
         var rightSpawner = wave.AddChoreoid(ScriptContent.SmallCricket);
 
@@ -87,7 +87,7 @@ public static class ScriptContent
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
         var center = worldBounds.Center.X;
 
-        var wave = new Wave(game, new WaveStats(5f));
+        var wave = new Wave(game, new WaveStats(5f, 10));
 
         var main = wave.AddChoreoid(ScriptContent.SmallCicada);
 
@@ -143,7 +143,7 @@ public static class ScriptContent
         var worldBounds = game.World.Bounds;
         var center = worldBounds.Center.X;
 
-        var wave = new Wave(game, new WaveStats(10f));
+        var wave = new Wave(game, new WaveStats(10f, 9));
 
         var main = wave.AddChoreoid(ScriptContent.Centipede);
 
@@ -180,7 +180,7 @@ public static class ScriptContent
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
         var center = worldBounds.Center.X;
 
-        var wave = new Wave(game, new WaveStats(5f));
+        var wave = new Wave(game, new WaveStats(5f, 1));
 
         var main = wave.AddChoreoid(ScriptContent.Beetle);
 
@@ -214,7 +214,7 @@ public static class ScriptContent
         var worldBounds = game.World.Bounds;
         var worldBoundsInset = worldBounds.Inflated(-20, -20);
         var worldBoundsOutset = worldBounds.Inflated(64, 64);
-        var wave = new Wave(game, new WaveStats(1f));
+        var wave = new Wave(game, new WaveStats(1f, 0));
 
         var main = wave.AddChoreoid(ScriptContent.BasicEnemy);
 

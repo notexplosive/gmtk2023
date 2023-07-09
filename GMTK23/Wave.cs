@@ -6,14 +6,14 @@ namespace GMTK23;
 public class Wave
 {
     private readonly Game _game;
-    private readonly WaveStats _waveStats;
+    public WaveStats Stats { get; }
     public float Cooldown { get; }
     private readonly List<MainChoreoid> _choreiods = new();
 
     public Wave(Game game, WaveStats waveStats)
     {
         _game = game;
-        _waveStats = waveStats;
+        Stats = waveStats;
         Cooldown = waveStats.Cooldown;
     }
 
@@ -39,4 +39,4 @@ public class Wave
     }
 }
 
-public record WaveStats(float Cooldown);
+public record WaveStats(float Cooldown, int TagFrame);

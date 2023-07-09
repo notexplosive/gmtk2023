@@ -114,6 +114,33 @@
 /processorParam:TextureFormat=Color
 /build:gmtk/big-sheet.png
 
+#begin gmtk/button-tags.aseprite
+/copy:gmtk/button-tags.aseprite
+
+#begin gmtk/button-tags.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gmtk/button-tags.png
+
+#begin gmtk/button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gmtk/button.png
+
 #begin gmtk/explosion.png
 /importer:TextureImporter
 /processor:TextureProcessor

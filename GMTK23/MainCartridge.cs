@@ -171,6 +171,9 @@ public class MainCartridge : BasicGameCartridge
 
         yield return new AssetLoadEvent("Player",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player"), new Point(32, 32)));
+        
+        yield return new AssetLoadEvent("ButtonTags",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/button-tags"), new Point(32, 32)));
 
         yield return new AssetLoadEvent("BackgroundTiles",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/background-tiles"), new Point(16)));

@@ -1,6 +1,7 @@
 ﻿using System;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
+using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Input;
 using ExplogineMonoGame.Rails;
@@ -24,14 +25,24 @@ public class ControlPanelButton : IUpdateInputHook, IDrawHook, IUpdateHook
 
     public void Draw(Painter painter)
     {
-        var color = Color.Blue;
+        var offset = Vector2.Zero;
         if (_isHovered)
         {
-            color = Color.LightBlue;
+            offset = new Vector2(0, 2);
+
+            if (_primed)
+            {
+                offset = new Vector2(0, 5);
+            }
         }
 
         var percent = Math.Clamp(_cooldownTimer / _wave.Cooldown, 0, 1f);
-        painter.DrawRectangle(_rectangle, new DrawSettings {Color = color, Depth = Depth.Middle});
+        
+        painter.DrawAsRectangle(Client.Assets.GetTexture("gmtk/button"), _rectangle.Moved(offset), new DrawSettings{Depth = Depth.Middle});
+
+        Client.Assets.GetAsset<SpriteSheet>("ButtonTags").DrawFrameAtPosition(painter, _wave.Stats.TagFrame, _rectangle.Moved(offset).Center, Scale2D.One, new DrawSettings{Depth = Depth.Middle-1, Origin = DrawOrigin.Center});
+        
+        // painter.DrawAsRectangle(Client.Assets.GetTexture("gmtk/button"), _rectangle.Moved(offset), new DrawSettings{Depth = Depth.Middle});
         painter.DrawRectangle(
             RectangleF.FromCorners(_rectangle.TopLeft,
                 Vector2Extensions.Lerp(_rectangle.BottomLeft, _rectangle.BottomRight,
