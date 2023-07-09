@@ -74,7 +74,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     {
         _rail = new Rail();
         Global.MusicPlayer.Play();
-        World = new World(_windowRect.Size);
+        World = new World(_windowRect.Size, Level);
         _player = new PlayerShip(_playerPersonalities[Level % _playerPersonalities.Count]);
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(_windowRect.Size.X / 2, -100);

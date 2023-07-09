@@ -14,10 +14,11 @@ public class World : IUpdateHook
     private int _totalScore;
     private float _time;
 
-    public World(Vector2 worldSize)
+    public World(Vector2 worldSize, int level)
     {
         Entities = new EntityCollection(this);
         Bounds = new RectangleF(Vector2.Zero, worldSize);
+        PlayerStatistics.Level = level;
     }
 
     public bool QuarterInserted { get; set; }

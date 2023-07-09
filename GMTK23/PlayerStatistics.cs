@@ -16,12 +16,14 @@ public class PlayerStatistics
 
     public float BossMeter { get; set; }
     public bool SpawnedBoss { get; set; }
+    
+    public int Level { get; set; }
 
     public void UpdateBossMeter(float dt, bool hasEnemies)
     {
         if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f &&  hasEnemies && Health > 0)
         {
-            BossMeter += dt / 10;
+            BossMeter += dt / Math.Max(5, 10 - Level);
         }
     }
 
