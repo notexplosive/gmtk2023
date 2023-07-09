@@ -171,7 +171,7 @@ public class PlayerShip : Ship
         ExecuteInput(dt);
 
         Position += _inputState.ToVector2() * _speed;
-        Position = new RectangleF(Position, Vector2.Zero).ConstrainedTo(World.Bounds).Center;
+        Position = new RectangleF(Position, Vector2.Zero).ConstrainedTo(World.Bounds.Inflated(-32, -32)).Center;
     }
 
     private void DeployBomb()

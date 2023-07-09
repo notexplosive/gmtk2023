@@ -34,6 +34,8 @@ public class MainCartridge : BasicGameCartridge
     public override CartridgeConfig CartridgeConfig { get; } =
         new(new Point(768, 432), SamplerState.PointWrap);
 
+    public bool IsInterludeActive { get; set; }
+
     public override void OnCartridgeStarted()
     {
         Global.MusicPlayer.Initialize();
@@ -59,6 +61,7 @@ public class MainCartridge : BasicGameCartridge
 
     public void SwitchToInterlude(PlayerStatistics playerStatistics)
     {
+        IsInterludeActive = true;
         Global.MusicPlayer.FadeToInterlude();
         _layout.ComputeInterlude(CartridgeConfig.RenderResolution!.Value);
 
@@ -87,6 +90,7 @@ public class MainCartridge : BasicGameCartridge
 
     public void SwitchToGameplay()
     {
+        IsInterludeActive = false;
         Global.MusicPlayer.FadeToMain();
         _layout.ComputeGameplay(CartridgeConfig.RenderResolution!.Value);
 

@@ -68,6 +68,16 @@ public class ControlPanel : Widget, IUpdateInputHook, IEarlyDrawHook, IUpdateHoo
             button.Draw(painter);
         }
         painter.EndSpriteBatch();
+        
+        painter.BeginSpriteBatch();
+        if (!_game.World.IsStarted)
+        {
+            painter.DrawRectangle(new RectangleF(Vector2.Zero, Size.ToVector2()),
+                new DrawSettings {Color = Color.Black.WithMultipliedOpacity(0.5f)});
+        }
+
+        painter.EndSpriteBatch();
+        
         Client.Graphics.PopCanvas();
     }
 

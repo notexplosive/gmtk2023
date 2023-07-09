@@ -57,6 +57,10 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
 
     public void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)
     {
+        if (!_mainCartridge.IsInterludeActive)
+        {
+            return;
+        }
         UpdateHovered(hitTestStack);
         if (input.Mouse.GetButton(MouseButton.Left).WasPressed && IsHovered)
         {
