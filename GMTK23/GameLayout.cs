@@ -46,7 +46,7 @@ public class GameLayout
         Controls = baked.FindElement(nameof(GameLayout.Controls)).Rectangle;
         Player = baked.FindElement(nameof(GameLayout.Player)).Rectangle;
         Status = baked.FindElement(nameof(GameLayout.Status)).Rectangle;
-        Interlude = new RectangleF(totalSize.ToVector2().JustX(), new Vector2(340, 420));
+        Interlude = new RectangleF(new Vector2(totalSize.ToVector2().X, Game.Y), new Vector2(300 - padding, 420));
     }
 
     public void ComputeInterlude(Point totalSize)
@@ -59,7 +59,7 @@ public class GameLayout
         var builder = new LayoutBuilder(
             new Style(
                 PaddingBetweenElements: padding,
-                Orientation: Orientation.Vertical,
+                Orientation: Orientation.Horizontal,
                 Margin: globalMargin)
         );
 

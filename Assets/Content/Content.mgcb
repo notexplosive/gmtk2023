@@ -331,6 +331,12 @@
 /processorParam:Quality=Best
 /build:gmtk/gmtk23_shoot9.ogg
 
+#begin gmtk/music_interlude.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/music_interlude.ogg
+
 #begin gmtk/music_main.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor

@@ -58,7 +58,6 @@ public class PlayerShip : Ship
                         )
                 );
             Global.PlaySound("gmtk23_explode1");
-            Global.MusicPlayer.Stop();
             World.GameOver();
         };
     }

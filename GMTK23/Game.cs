@@ -89,7 +89,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         World.OnGameOver += ()=>
         {
             _mainCartridge.SwitchToInterlude();
-            _mainCartridge.SwitchToGameplay();
+            // _mainCartridge.SwitchToGameplay();
         };
     }
 

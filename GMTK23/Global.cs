@@ -22,23 +22,3 @@ public static class Global
         instance.Play();
     }
 }
-
-public class MusicPlayer
-{
-    public void Play()
-    {
-        var track = Client.Assets.GetSoundEffectInstance("gmtk/music_main");
-
-        track.IsLooped = true;
-        track.Volume = 0.35f;
-        track.Stop();
-        track.Play();
-    }
-
-    public void Stop()
-    {
-        var track = Client.Assets.GetSoundEffectInstance("gmtk/music_main");
-
-        track.Stop();
-    }
-}
