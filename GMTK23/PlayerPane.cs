@@ -33,7 +33,7 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
         if (_game.World.PlayerStatistics.BossMeter < 1f)
         {
             painter.DrawRectangle(bodyRect, new DrawSettings{Depth = Depth.Back});
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 16), GetStringForIntensity(_game.World.PlayerStatistics.IntensityAsBidirectionalPercent), bodyRect,
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 20), GetStringForIntensity(_game.World.PlayerStatistics.IntensityAsBidirectionalPercent), bodyRect,
                 Alignment.TopCenter, new DrawSettings {Color = Color.Black});
             var barRect = bodyRect.Inflated(-10, -10).Moved(new Vector2(0, 10));
 
