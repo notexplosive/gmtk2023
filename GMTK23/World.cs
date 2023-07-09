@@ -3,6 +3,7 @@ using System.Linq;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
+using ExTween;
 using Microsoft.Xna.Framework;
 
 namespace GMTK23;
@@ -11,23 +12,32 @@ public class World : IUpdateHook
 {
     private int _totalScore;
 
-    public bool QuarterInserted { get; set; }
-
-    public bool IsStarted { get; set; }
-    
     public World(Vector2 worldSize)
     {
         Entities = new EntityCollection(this);
         Bounds = new RectangleF(Vector2.Zero, worldSize);
     }
 
+    public bool QuarterInserted { get; set; }
+
+    public bool IsStarted { get; set; }
+
     public EntityCollection Entities { get; }
     public RectangleF Bounds { get; }
 
     public bool IsGameOver { get; private set; }
 
+    public MultiplexTween ActiveTween { get; } = new();
+
     public void Update(float dt)
     {
+        ActiveTween.Update(dt);
+
+        if (ActiveTween.IsDone())
+        {
+            ActiveTween.Clear();
+        }
+        
         var bullets = Entities.OfType<Bullet>().ToList();
         var shipsThatAreInBounds =
             Entities.OfType<TeamedEntity>().Where(ship => Bounds.Contains(ship.BoundingBox)).ToList();
@@ -81,14 +91,14 @@ public class World : IUpdateHook
                 Alignment.Center, new DrawSettings());
             return;
         }
-        
+
         if (!IsStarted)
         {
             painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "FOR GREAT JUSTICE", Bounds,
                 Alignment.Center, new DrawSettings());
             return;
         }
-        
+
         if (IsGameOver)
         {
             painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds,

@@ -46,9 +46,7 @@ public class MainCartridge : BasicGameCartridge
             SwitchToGameplay();
         };
         _rail.Add(_game);
-        _rail.Add(_game.World);
-        _rail.Add(_game.World.Entities);
-        
+
         _controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(_game).ToList());
         _rail.Add(_controlPanel);
 

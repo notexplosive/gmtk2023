@@ -21,7 +21,7 @@ public class Wave
     {
         foreach (var choreoid in _choreiods)
         {
-            _game.ActiveTween.AddChannel(choreoid.GenerateTween());
+            _game.World.ActiveTween.AddChannel(choreoid.GenerateTween());
         }
     }
 

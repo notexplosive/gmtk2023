@@ -24,6 +24,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private Vector2 _mousePos;
     private RectangleF _scrollingCamera;
     private RectangleF _windowRect;
+    private Rail _rail;
 
     public Game(RectangleF windowRect)
     {
@@ -55,6 +56,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     
     public void Reboot()
     {
+        _rail = new Rail();
         Global.MusicPlayer.Play();
         World = new World(_windowRect.Size);
         _player = new PlayerShip(new PlayerPersonality());
@@ -75,12 +77,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             .Add(new CallbackTween(() => { World.IsStarted = true; }))
             ;
 
-        ActiveTween.AddChannel(
+        World.ActiveTween.AddChannel(
             startupSequence
             );
+        
+        _rail.Add(World);
+        _rail.Add(World.Entities);
     }
 
-    public MultiplexTween ActiveTween { get; } = new();
 
     public Vector2 Position
     {
@@ -90,12 +94,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public void Draw(Painter painter)
     {
+        _rail.Draw(painter);
         painter.DrawRectangle(_windowRect, new DrawSettings {Color = Color.Red});
         painter.DrawAsRectangle(_canvas.Texture, _windowRect, new DrawSettings());
     }
 
     public void EarlyDraw(Painter painter)
     {
+        _rail.EarlyDraw(painter);
         Client.Graphics.PushCanvas(_canvas);
         // draw background
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
@@ -158,19 +164,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public void Update(float dt)
     {
+        _rail.Update(dt);
+
         var bgSpeed = dt * 30;
         _scrollingCamera.Location += new Vector2(0, bgSpeed);
 
         foreach (var sprite in _backgroundSprites)
         {
             sprite.MoveUpBy(bgSpeed);
-        }
-
-        ActiveTween.Update(dt);
-
-        if (ActiveTween.IsDone())
-        {
-            ActiveTween.Clear();
         }
 
         // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
@@ -190,6 +191,8 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public void UpdateInput(ConsumableInput input, HitTestStack parentHitTestStack)
     {
+        _rail.UpdateInput(input,parentHitTestStack);
+
         if (!Client.Debug.IsPassiveOrActive)
         {
             return;
@@ -221,10 +224,5 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
                 _player.TargetPosition = _mousePos;
             }
         }
-    }
-
-    public void MoveWindowTo(RectangleF layoutGame)
-    {
-        _windowRect.Location = layoutGame.Location;
     }
 }
