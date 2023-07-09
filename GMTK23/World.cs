@@ -12,6 +12,7 @@ namespace GMTK23;
 public class World : IUpdateHook
 {
     private int _totalScore;
+    private float _time;
 
     public World(Vector2 worldSize)
     {
@@ -33,6 +34,7 @@ public class World : IUpdateHook
 
     public void Update(float dt)
     {
+        _time += dt;
         ActiveTween.Update(dt);
 
         if (ActiveTween.IsDone())
@@ -111,12 +113,12 @@ public class World : IUpdateHook
                 .Add(new WaitSecondsTween(1))
                 .Add(new CallbackTween(()=>Global.PlaySound("gmtk23_gameover")))
                 .Add(new WaitSecondsTween(1))
-                .Add(new CallbackTween(()=>OnGameOver?.Invoke()))
+                .Add(new CallbackTween(()=>OnGameOver?.Invoke(PlayerStatistics)))
         );
         IsGameOver = true;
     }
 
-    public event Action? OnGameOver;
+    public event Action<PlayerStatistics>? OnGameOver;
 
     public void DrawOverlay(Painter painter)
     {
@@ -125,8 +127,12 @@ public class World : IUpdateHook
 
         if (!QuarterInserted)
         {
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "Insert Coin", Bounds,
-                Alignment.Center, new DrawSettings());
+            if (MathF.Sin(_time * 5) > 0)
+            {
+                painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "Insert Coin", Bounds,
+                    Alignment.Center, new DrawSettings());
+            }
+
             return;
         }
         
@@ -147,15 +153,18 @@ public class World : IUpdateHook
 
         if (!IsStarted)
         {
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "FOR GREAT JUSTICE", Bounds,
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME START", Bounds,
                 Alignment.Center, new DrawSettings());
             return;
         }
 
         if (IsGameOver)
         {
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds,
-                Alignment.Center, new DrawSettings());
+            if (MathF.Sin(_time * 5) > 0)
+            {
+                painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds,
+                    Alignment.Center, new DrawSettings());
+            }
         }
     }
 

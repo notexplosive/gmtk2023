@@ -29,17 +29,29 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
         
         painter.BeginSpriteBatch();
         var bodyRect = new RectangleF(0, 162, 162, 46);
-        painter.DrawRectangle(bodyRect, new DrawSettings());
-        
-        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 16),"Focused", bodyRect, Alignment.TopCenter, new DrawSettings{Color = Color.Black});
-        var barRect = bodyRect.Inflated(-10, -10).Moved(new Vector2(0, 10));
-        
-        painter.DrawLineRectangle(barRect, new LineDrawSettings{Color = Color.Black, Depth = Depth.Front});
-        var halfWidth = barRect.Width / 2f;
 
-        var currentX = barRect.Center.X + halfWidth * _game.World.PlayerStatistics.IntensityAsBidirectionalPercent;
+        if (_game.World.PlayerStatistics.BossMeter < 1f)
+        {
+            painter.DrawRectangle(bodyRect, new DrawSettings{Depth = Depth.Back});
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 16), "Focused", bodyRect,
+                Alignment.TopCenter, new DrawSettings {Color = Color.Black});
+            var barRect = bodyRect.Inflated(-10, -10).Moved(new Vector2(0, 10));
 
-        painter.DrawLine(new Vector2(currentX, barRect.Top), new Vector2(currentX, barRect.Bottom),new LineDrawSettings{Color = Color.Black, Depth = Depth.Front});
+            painter.DrawLineRectangle(barRect, new LineDrawSettings {Color = Color.Black, Depth = Depth.Front});
+            var halfWidth = barRect.Width / 2f;
+
+            var currentX = barRect.Center.X + halfWidth * _game.World.PlayerStatistics.IntensityAsBidirectionalPercent;
+
+            painter.DrawLine(new Vector2(currentX, barRect.Top), new Vector2(currentX, barRect.Bottom),
+                new LineDrawSettings {Color = Color.Black, Depth = Depth.Front});
+        }
+
+        else
+        {
+            painter.DrawRectangle(bodyRect, new DrawSettings{Depth = Depth.Back, Color = Color.Black});
+            painter.DrawStringWithinRectangle(Global.GetFont(20),"BOSS TIME",bodyRect, Alignment.Center, new DrawSettings{Color = Color.Red, Depth = Depth.Middle});
+        }
+        
         painter.EndSpriteBatch();
         Client.Graphics.PopCanvas();
     }

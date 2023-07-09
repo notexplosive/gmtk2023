@@ -16,7 +16,7 @@ public class BackgroundObject
     public BackgroundObject(SpriteSheet sheet, Vector2 position, Depth depth)
     {
         _sheet = sheet;
-        _frame = Client.Random.Dirty.NextInt(0, sheet.FrameCount + 1);
+        _frame = Client.Random.Dirty.NextInt(0, 4);
         _position = position;
         RenderDepth = depth;
         _flipX = Client.Random.Dirty.NextBool();
@@ -37,7 +37,7 @@ public class BackgroundObject
 
         if (Rectangle.Bottom < 0)
         {
-            _frame = Client.Random.Dirty.NextInt(0, _sheet.FrameCount + 1);
+            _frame = Client.Random.Dirty.NextInt(0, 4);
             _position = new Vector2(_position.X, _position.Y + 420 + 64);
             _flipX = Client.Random.Dirty.NextBool();
         }

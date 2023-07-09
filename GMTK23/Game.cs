@@ -26,9 +26,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
     private readonly MainCartridge _mainCartridge;
     private RectangleF _windowRect;
     private Rail _rail;
+    private int _level;
+    private List<PlayerPersonality> _playerPersonalities = new();
 
     public Game(MainCartridge mainCartridge,RectangleF windowRect)
     {
+        _playerPersonalities.Add(new PlayerPersonality());
+        _playerPersonalities.Add(new PlayerPersonality());
+        
         _mainCartridge = mainCartridge;
         _windowRect = windowRect;
         var renderResolution = windowRect.Size.ToPoint();
@@ -70,7 +75,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         _rail = new Rail();
         Global.MusicPlayer.Play();
         World = new World(_windowRect.Size);
-        _player = new PlayerShip(new PlayerPersonality());
+        _player = new PlayerShip(_playerPersonalities[_level % _playerPersonalities.Count]);
         World.Entities.AddImmediate(_player);
         _player.Position = new Vector2(_windowRect.Size.X / 2, -100);
 
@@ -95,10 +100,14 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         _rail.Add(World);
         _rail.Add(World.Entities);
         
-        World.OnGameOver += ()=>
+        World.OnGameOver += (playerStats)=>
         {
-            _mainCartridge.SwitchToInterlude();
-            _mainCartridge.SwitchToGameplay();
+            _mainCartridge.SwitchToInterlude(playerStats);
+
+            if (playerStats.SpawnedBoss)
+            {
+                _level++;
+            }
         };
     }
 
@@ -191,6 +200,16 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             sprite.MoveUpBy(bgSpeed);
         }
 
+        if (World.PlayerStatistics.BossMeter > 1)
+        {
+            if (!World.PlayerStatistics.SpawnedBoss)
+            {
+                World.PlayerStatistics.SpawnedBoss = true;
+                var boss = World.Entities.AddImmediate(new Boss());
+                boss.Position = new Vector2(420/2f,420 + 64);
+            }
+        }
+
         // var rect = new RectangleF(_mousePos, Vector2.Zero).Inflated(30, 30);
         //
         // var foundCells = new HashSet<HeatmapCell>();
@@ -208,11 +227,24 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
     public void UpdateInput(ConsumableInput input, HitTestStack parentHitTestStack)
     {
+
         _rail.UpdateInput(input,parentHitTestStack);
 
         if (!Client.Debug.IsPassiveOrActive)
         {
             return;
+        }
+        
+        if (input.Keyboard.GetButton(Keys.E).WasPressed)
+        {
+            World.PlayerStatistics.BossMeter += 0.1f;
+        }
+
+        if (input.Keyboard.GetButton(Keys.W).WasPressed)
+        {
+            var boss = World.Entities.AddImmediate(new Boss());
+
+            boss.Position = new Vector2(420) / 2;
         }
 
         if (input.Keyboard.GetButton(Keys.Q).WasPressed)

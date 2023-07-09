@@ -14,7 +14,8 @@ public class PlayerStatistics
 
     public float IntensityAsBidirectionalPercent => Intensity / 100f;
 
-    public float BossMeter { get; private set; }
+    public float BossMeter { get; set; }
+    public bool SpawnedBoss { get; set; }
 
     public void UpdateBossMeter(float dt)
     {

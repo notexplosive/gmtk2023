@@ -57,7 +57,7 @@ public class MainCartridge : BasicGameCartridge
         _rail.Add(_interlude);
     }
 
-    public void SwitchToInterlude()
+    public void SwitchToInterlude(PlayerStatistics playerStatistics)
     {
         Global.MusicPlayer.FadeToInterlude();
         _layout.ComputeInterlude(CartridgeConfig.RenderResolution!.Value);
@@ -68,6 +68,7 @@ public class MainCartridge : BasicGameCartridge
         var playerPaneTweenable = new TweenableVector2(() => _playerPane.Position, val => _playerPane.Position = val);
         var statusTweenable = new TweenableVector2(() => _statusScreen.Position, val => _statusScreen.Position = val);
 
+        _interlude.InitializeWith(playerStatistics);
         _interlude.ResizeCanvas(_layout.Interlude.Size.ToPoint());
         _interlude.Size = _layout.Interlude.Size.ToPoint();
         var interludeTweenable = new TweenableVector2(() => _interlude.Position, val => _interlude.Position = val);
@@ -165,6 +166,21 @@ public class MainCartridge : BasicGameCartridge
 
                 return canvas.AsTextureAsset();
             });
+        
+        yield return new AssetLoadEvent("white-big-sheet",
+            () =>
+            {
+                var sheet = Client.Assets.GetTexture("gmtk/big-sheet");
+                var canvas = new Canvas(sheet.Width, sheet.Height);
+
+                Client.Graphics.PushCanvas(canvas);
+                painter.BeginSpriteBatch(Matrix.Identity, Client.Assets.GetEffect("gmtk/Whiten"));
+                painter.DrawAtPosition(sheet, Vector2.Zero);
+                painter.EndSpriteBatch();
+                Client.Graphics.PopCanvas();
+
+                return canvas.AsTextureAsset();
+            });
 
         yield return new AssetLoadEvent("WhiteShips",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("white-ships-sheet"), new Point(32, 32)));
@@ -186,6 +202,30 @@ public class MainCartridge : BasicGameCartridge
                 sheet.AddFrame(new Rectangle(0, 0, 64, 64));
                 sheet.AddFrame(new Rectangle(64, 0, 64, 64));
                 sheet.AddFrame(new Rectangle(192, 0, 64, 64));
+                // boss
+                sheet.AddFrame(new Rectangle(128, 0, 64, 64));
+                
+                // cicada
+                sheet.AddFrame(new Rectangle(0, 64, 64, 64));
+                return sheet;
+            });
+        
+        
+        
+        yield return new AssetLoadEvent("BigSheetWithFlash",
+            () =>
+            {
+                var sheet = new VirtualSpriteSheet(Client.Assets.GetTexture("white-big-sheet"));
+
+                sheet.AddFrame(new Rectangle(0, 0, 64, 64));
+                sheet.AddFrame(new Rectangle(64, 0, 64, 64));
+                sheet.AddFrame(new Rectangle(192, 0, 64, 64));
+                
+                // boss
+                sheet.AddFrame(new Rectangle(128, 0, 64, 64));
+                
+                // cicada
+                sheet.AddFrame(new Rectangle(0, 64, 64, 64));
                 return sheet;
             });
 

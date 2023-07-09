@@ -1,4 +1,5 @@
-﻿using ExplogineCore.Data;
+﻿using System.Diagnostics;
+using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
@@ -21,5 +22,17 @@ public class Interlude : Widget, IEarlyDrawHook
         painter.EndSpriteBatch();
         
         Client.Graphics.PopCanvas();
+    }
+
+    public void InitializeWith(PlayerStatistics playerStatistics)
+    {
+        if (playerStatistics.SpawnedBoss)
+        {
+            Client.Debug.Log("Won");
+        }
+        else
+        {
+            Client.Debug.Log("Lost");
+        }
     }
 }
