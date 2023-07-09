@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
@@ -43,6 +44,11 @@ public class EnemyShip : Ship
                 World.ScoreDoober(Position, (int) (_shipStats.Health * _shipStats.BulletStats.Speed) * 100);
                 Global.PlaySound("gmtk23_enemy3");
                 World.PlayerStatistics.Intensity -= (_shipStats.Health * _shipStats.BulletStats.Speed) / 2f;
+
+                if (World.Entities.Any(ent => ent is EnemyShip))
+                {
+                    World.PlayerStatistics.Intensity += 5;
+                }
             }
         };
         TookDamage += () =>

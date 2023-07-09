@@ -32,8 +32,6 @@ public class World : IUpdateHook
 
     public void Update(float dt)
     {
-        
-
         ActiveTween.Update(dt);
 
         if (ActiveTween.IsDone())
@@ -89,6 +87,11 @@ public class World : IUpdateHook
 
     public void GameOver()
     {
+        ActiveTween.AddChannel(
+            new SequenceTween()
+                .Add(new WaitSecondsTween(1))
+                .Add(new CallbackTween(()=>Global.PlaySound("gmtk23_gameover")))
+        );
         IsGameOver = true;
         OnGameOver?.Invoke();
     }
