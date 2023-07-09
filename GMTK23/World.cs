@@ -106,11 +106,13 @@ public class World : IUpdateHook
     {
         ActiveTween.AddChannel(
             new SequenceTween()
+                .Add(new CallbackTween(()=>Global.MusicPlayer.FadeToInterlude()))
                 .Add(new WaitSecondsTween(1))
                 .Add(new CallbackTween(()=>Global.PlaySound("gmtk23_gameover")))
+                .Add(new WaitSecondsTween(1))
+                .Add(new CallbackTween(()=>OnGameOver?.Invoke()))
         );
         IsGameOver = true;
-        OnGameOver?.Invoke();
     }
 
     public event Action? OnGameOver;

@@ -7,25 +7,23 @@ namespace GMTK23;
 
 public class MusicPlayer
 {
-    private MultiplexTween _tween = new();
-    private SoundEffectInstance _mainTrack = null!;
-    private SoundEffectInstance _intrTrack = null!;
-    private readonly TweenableFloat _mainTrackVolumeTweenable = new();
     private readonly TweenableFloat _intrTrackVolumeTweenable = new();
+    private readonly TweenableFloat _mainTrackVolumeTweenable = new();
+    private readonly SequenceTween _tween = new();
+    private SoundEffectInstance _intrTrack = null!;
+    private SoundEffectInstance _mainTrack = null!;
 
     /// <summary>
-    ///  needs content to be ready, cannot be constructor
+    ///     needs content to be ready, cannot be constructor
     /// </summary>
     public void Initialize()
     {
         _mainTrack = Client.SoundPlayer.Play("gmtk/music_main", new SoundEffectSettings {Loop = true, Volume = 0});
         _intrTrack = Client.SoundPlayer.Play("gmtk/music_interlude", new SoundEffectSettings {Loop = true, Volume = 0});
     }
-    
+
     public void Play()
     {
-        Stop();
-        
         _mainTrack.Play();
         _intrTrack.Play();
 
@@ -41,16 +39,20 @@ public class MusicPlayer
 
     public void FadeToMain()
     {
-        var fadeDuration = 1;
-        _tween.AddChannel(_mainTrackVolumeTweenable.TweenTo(1, fadeDuration, Ease.Linear));
-        _tween.AddChannel(_intrTrackVolumeTweenable.TweenTo(0, fadeDuration, Ease.Linear));
+        var fadeDuration = 0.25f;
+        _tween.Add(new MultiplexTween()
+                .AddChannel(_mainTrackVolumeTweenable.TweenTo(1, fadeDuration, Ease.Linear))
+                .AddChannel(_intrTrackVolumeTweenable.TweenTo(0, fadeDuration, Ease.Linear))
+            );
     }
-    
+
     public void FadeToInterlude()
     {
-        var fadeDuration = 1;
-        _tween.AddChannel(_mainTrackVolumeTweenable.TweenTo(0, fadeDuration, Ease.Linear));
-        _tween.AddChannel(_intrTrackVolumeTweenable.TweenTo(1, fadeDuration, Ease.Linear));
+        var fadeDuration = 0.25f;
+        _tween.Add(new MultiplexTween()
+            .AddChannel(_mainTrackVolumeTweenable.TweenTo(0, fadeDuration, Ease.Linear))
+            .AddChannel(_intrTrackVolumeTweenable.TweenTo(1, fadeDuration, Ease.Linear))
+        );
     }
 
     public void UpdateFader(float dt)
