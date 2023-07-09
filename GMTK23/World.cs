@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ExplogineMonoGame;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
@@ -10,6 +11,10 @@ public class World : IUpdateHook
 {
     private int _totalScore;
 
+    public bool QuarterInserted { get; set; }
+
+    public bool IsStarted { get; set; }
+    
     public World(Vector2 worldSize)
     {
         Entities = new EntityCollection(this);
@@ -60,15 +65,34 @@ public class World : IUpdateHook
     public void GameOver()
     {
         IsGameOver = true;
+        OnGameOver?.Invoke();
     }
+
+    public event Action? OnGameOver;
 
     public void DrawOverlay(Painter painter)
     {
-        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), _totalScore.ToString(), Bounds, Alignment.TopRight, new DrawSettings());
+        painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), _totalScore.ToString(), Bounds,
+            Alignment.TopRight, new DrawSettings());
+
+        if (!QuarterInserted)
+        {
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "Insert Coin", Bounds,
+                Alignment.Center, new DrawSettings());
+            return;
+        }
+        
+        if (!IsStarted)
+        {
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "FOR GREAT JUSTICE", Bounds,
+                Alignment.Center, new DrawSettings());
+            return;
+        }
         
         if (IsGameOver)
         {
-            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds, Alignment.Center, new DrawSettings());
+            painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "GAME OVER", Bounds,
+                Alignment.Center, new DrawSettings());
         }
     }
 

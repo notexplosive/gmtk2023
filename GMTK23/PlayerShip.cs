@@ -105,6 +105,11 @@ public class PlayerShip : Ship
 
     public override void Update(float dt)
     {
+        if (!World.IsStarted)
+        {
+            return;
+        }
+        
         Heatmap.Update(dt);
 
         _invulnerableTimer -= dt;

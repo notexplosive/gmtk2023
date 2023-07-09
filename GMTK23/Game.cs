@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
 using ExplogineMonoGame.AssetManagement;
@@ -7,29 +6,27 @@ using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Input;
 using ExplogineMonoGame.Rails;
 using ExTween;
+using ExTweenMonoGame;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace GMTK23;
 
 public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 {
+    private readonly List<BackgroundObject> _backgroundSprites;
     private readonly Camera _camera;
     private readonly Canvas _canvas;
     private readonly HoverState _hoverState = new();
-    private readonly RectangleF _windowRect;
-    private RectangleF _scrollingCamera;
+    private PlayerShip _player;
 
-    public readonly World World;
-    private readonly PlayerShip _player;
+    public World World = null!;
     private Vector2 _mousePos;
-    private readonly List<BackgroundObject> _backgroundSprites;
+    private RectangleF _scrollingCamera;
+    private RectangleF _windowRect;
 
     public Game(RectangleF windowRect)
     {
-        Global.MusicPlayer.Play();
-        
         _windowRect = windowRect;
         var renderResolution = windowRect.Size.ToPoint();
         _canvas = new Canvas(renderResolution);
@@ -38,28 +35,58 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         _camera = new Camera(cameraRect, renderResolution);
         _scrollingCamera = cameraRect;
 
-        World = new World(_windowRect.Size);
-        _player = new PlayerShip(new PlayerPersonality()); 
-        World.Entities.AddImmediate(_player);
-        _player.Position = new Vector2(windowRect.Size.X / 2, 50);
-
         _backgroundSprites = new List<BackgroundObject>();
 
         var backgroundSpriteCount = 3;
-        for (int i = 0; i < backgroundSpriteCount + 1; i++)
+        for (var i = 0; i < backgroundSpriteCount + 1; i++)
         {
             var x = 420 / backgroundSpriteCount * i - 32;
             _backgroundSprites.Add(new BackgroundObject(
                 Client.Assets.GetAsset<SpriteSheet>("BigSheet"),
                 new Vector2(
                     x,
-                    x +  128 * Client.Random.Dirty.NextFloat()
-                    )
-                    ));
+                    x + 128 * Client.Random.Dirty.NextFloat()
+                )
+            ));
         }
+        
+        Reboot();
+    }
+    
+    public void Reboot()
+    {
+        Global.MusicPlayer.Play();
+        World = new World(_windowRect.Size);
+        _player = new PlayerShip(new PlayerPersonality());
+        World.Entities.AddImmediate(_player);
+        _player.Position = new Vector2(_windowRect.Size.X / 2, -100);
+
+        var playerPositionTweenable = new TweenableVector2(() => _player.Position, val => _player.Position = val);
+
+        var startupSequence = new SequenceTween();
+        startupSequence
+            .Add(new WaitSecondsTween(3f))
+            .Add(new CallbackTween(() =>
+            {
+                World.QuarterInserted = true; 
+                Global.PlaySound("gmtk23_jingle1");
+            }))
+            .Add(playerPositionTweenable.TweenTo(new Vector2(_windowRect.Size.X / 2, 50), 1f, Ease.CubicFastSlow))
+            .Add(new CallbackTween(() => { World.IsStarted = true; }))
+            ;
+
+        ActiveTween.AddChannel(
+            startupSequence
+            );
     }
 
     public MultiplexTween ActiveTween { get; } = new();
+
+    public Vector2 Position
+    {
+        get => _windowRect.Location;
+        set => _windowRect.Location = value;
+    }
 
     public void Draw(Painter painter)
     {
@@ -79,18 +106,17 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
                 {SourceRectangle = new Rectangle(_scrollingCamera.Location.ToPoint(), _canvas.Size)});
 
         painter.EndSpriteBatch();
-        
+
         // draw background objects
-        
+
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
 
         foreach (var sprite in _backgroundSprites)
         {
             sprite.Draw(painter);
         }
-        
-        painter.EndSpriteBatch();
 
+        painter.EndSpriteBatch();
 
         // draw entities
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
@@ -101,7 +127,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
             {
                 continue;
             }
-            
+
             entity.Draw(painter);
         }
 
@@ -117,26 +143,24 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
                 entity.Draw(painter);
             }
         }
-        
+
         painter.EndSpriteBatch();
-        
+
         // draw overlay
         painter.BeginSpriteBatch(_camera.CanvasToScreen);
 
         World.DrawOverlay(painter);
-        
+
         painter.EndSpriteBatch();
-        
-        
+
         Client.Graphics.PopCanvas();
-        
     }
 
     public void Update(float dt)
     {
         var bgSpeed = dt * 30;
         _scrollingCamera.Location += new Vector2(0, bgSpeed);
-        
+
         foreach (var sprite in _backgroundSprites)
         {
             sprite.MoveUpBy(bgSpeed);
@@ -175,7 +199,7 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         {
             _player.Destroy();
         }
-        
+
         var hitTestStack = parentHitTestStack.AddLayer(
             _windowRect.CanvasToScreen(_windowRect.Size.ToPoint()) * _camera.ScreenToCanvas, Depth.Middle, _windowRect);
 
@@ -197,5 +221,10 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
                 _player.TargetPosition = _mousePos;
             }
         }
+    }
+
+    public void MoveWindowTo(RectangleF layoutGame)
+    {
+        _windowRect.Location = layoutGame.Location;
     }
 }

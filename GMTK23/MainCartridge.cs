@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ExplogineCore;
@@ -8,6 +9,8 @@ using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Cartridges;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
+using ExTween;
+using ExTweenMonoGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +21,10 @@ public class MainCartridge : BasicGameCartridge
 {
     private readonly GameLayout _layout;
     private Rail _rail = new();
+    private Game _game = null!;
+    private ControlPanel _controlPanel = null!;
+    private PlayerPane _playerPane = null!;
+    private SequenceTween _tween = new ();
 
     public MainCartridge(IRuntime runtime) : base(runtime)
     {
@@ -29,19 +36,59 @@ public class MainCartridge : BasicGameCartridge
 
     public override void OnCartridgeStarted()
     {
-        _layout.Compute(CartridgeConfig.RenderResolution!.Value);
+        _layout.ComputeGameplay(CartridgeConfig.RenderResolution!.Value);
 
         _rail = new Rail();
-        var game = new Game(_layout.Game);
-        _rail.Add(game);
-        _rail.Add(game.World);
-        _rail.Add(game.World.Entities);
+        _game = new Game(_layout.Game);
+        _game.World.OnGameOver += ()=>
+        {
+            SwitchToInterlude();
+            SwitchToGameplay();
+        };
+        _rail.Add(_game);
+        _rail.Add(_game.World);
+        _rail.Add(_game.World.Entities);
         
-        var controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(game).ToList());
-        _rail.Add(controlPanel);
+        _controlPanel = new ControlPanel(_layout.Controls, ScriptContent.Summons(_game).ToList());
+        _rail.Add(_controlPanel);
 
-        var playerPane = new PlayerPane(_layout.Player, game);
-        _rail.Add(playerPane);
+        _playerPane = new PlayerPane(_layout.Player, _game);
+        _rail.Add(_playerPane);
+    }
+
+    private void SwitchToInterlude()
+    {
+        var duration = 1f;
+        _layout.ComputeInterlude(CartridgeConfig.RenderResolution!.Value);
+
+        var gameTweenable = new TweenableVector2(() => _game.Position, val => _game.Position = val);
+        var controlPanelTweenable = new TweenableVector2(()=> _controlPanel.Position, (val)=> _controlPanel.Position = val); 
+        var playerPaneTweenable = new TweenableVector2(()=> _playerPane.Position, (val)=> _playerPane.Position = val);
+
+        _tween.Add(new WaitSecondsTween(1));
+        _tween.Add(new MultiplexTween()
+            .AddChannel(playerPaneTweenable.TweenTo(_layout.Player.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(controlPanelTweenable.TweenTo(_layout.Controls.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(gameTweenable.TweenTo(_layout.Game.Location, 1f, Ease.QuadFastSlow))
+        );
+    }
+    
+    private void SwitchToGameplay()
+    {
+        var duration = 1f;
+        _layout.ComputeGameplay(CartridgeConfig.RenderResolution!.Value);
+
+        var gameTweenable = new TweenableVector2(() => _game.Position, val => _game.Position = val);
+        var controlPanelTweenable = new TweenableVector2(()=> _controlPanel.Position, (val)=> _controlPanel.Position = val); 
+        var playerPaneTweenable = new TweenableVector2(()=> _playerPane.Position, (val)=> _playerPane.Position = val);
+
+        _tween.Add(new WaitSecondsTween(1));
+        _tween.Add(new MultiplexTween()
+            .AddChannel(playerPaneTweenable.TweenTo(_layout.Player.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(controlPanelTweenable.TweenTo(_layout.Controls.Location, 1f, Ease.QuadFastSlow))
+            .AddChannel(gameTweenable.TweenTo(_layout.Game.Location, 1f, Ease.QuadFastSlow))
+        );
+        _tween.Add(new CallbackTween(() => _game.Reboot()));
     }
 
     public override void UpdateInput(ConsumableInput input, HitTestStack hitTestStack)
@@ -60,6 +107,12 @@ public class MainCartridge : BasicGameCartridge
     public override void Update(float dt)
     {
         _rail.Update(dt);
+        _tween.Update(dt);
+
+        if (_tween.IsDone())
+        {
+            _tween.Clear();
+        }
     }
 
     public override void Draw(Painter painter)
