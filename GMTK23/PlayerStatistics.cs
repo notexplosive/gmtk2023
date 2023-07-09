@@ -23,4 +23,10 @@ public class PlayerStatistics
             BossMeter += dt / 10;
         }
     }
+
+    public int Health;
+
+    public int Bombs;
+
+    public PowerUpType? CurrentPowerUp;
 }

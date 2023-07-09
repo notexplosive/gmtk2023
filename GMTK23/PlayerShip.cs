@@ -21,6 +21,7 @@ public class PlayerShip : Ship
     private float _invulnerableTimer;
     private bool _shouldAnimate;
     private PowerUpType? _currentPowerUp;
+    private int _bombs = 3;
 
     public PlayerShip(PlayerPersonality personality) : base(Team.Player, 5)
     {
@@ -106,6 +107,10 @@ public class PlayerShip : Ship
 
     public override void Update(float dt)
     {
+        World.PlayerStatistics.Health = Health;
+        World.PlayerStatistics.Bombs = _bombs;
+        World.PlayerStatistics.CurrentPowerUp = _currentPowerUp;
+        
         if (!World.IsStarted)
         {
             return;

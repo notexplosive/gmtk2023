@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ExplogineMonoGame;
+using ExplogineMonoGame.AssetManagement;
 using ExplogineMonoGame.Data;
 using ExplogineMonoGame.Rails;
 using ExTween;
@@ -127,6 +128,21 @@ public class World : IUpdateHook
             painter.DrawStringWithinRectangle(Client.Assets.GetFont("gmtk/GameFont", 32), "Insert Coin", Bounds,
                 Alignment.Center, new DrawSettings());
             return;
+        }
+        
+        var hpRect = new Rectangle(8, 8, 32, 32);
+        
+        for (int i = 0; i < PlayerStatistics.Health; i++)
+        {
+            Global.MainSheet.DrawFrameAsRectangle(painter, 16, hpRect, new DrawSettings());
+            hpRect = hpRect.Moved(new Vector2(32, 0));
+        }
+        
+        var bombRect = new Rectangle(8, 8 + 32, 32, 32);
+        for (int i = 0; i < PlayerStatistics.Bombs; i++)
+        {
+            Global.MainSheet.DrawFrameAsRectangle(painter, 19, bombRect, new DrawSettings());
+            bombRect = bombRect.Moved(new Vector2(20, 0));
         }
 
         if (!IsStarted)
