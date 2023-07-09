@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 var config = new WindowConfigWritable
 {
     WindowSize = new Point(1600, 900),
-    Title = "GMTK 2023"
+    Title = "Pest Control - GMTK 2023"
 };
 Bootstrap.Run(args, new WindowConfig(config), runtime =>
     {

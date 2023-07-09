@@ -204,10 +204,12 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
         {
             if (!World.PlayerStatistics.SpawnedBoss)
             {
-                Global.PlaySound("gmtk23_enemy3");
+                Global.MusicPlayer.FadeToBoss(() =>
+                {
+                    var boss = World.Entities.AddImmediate(new Boss());
+                    boss.Position = new Vector2(420/2f,420 + 64);
+                });
                 World.PlayerStatistics.SpawnedBoss = true;
-                var boss = World.Entities.AddImmediate(new Boss());
-                boss.Position = new Vector2(420/2f,420 + 64);
             }
         }
 

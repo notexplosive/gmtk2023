@@ -244,6 +244,12 @@
 /processorParam:Quality=Best
 /build:gmtk/gmtk23_jingle1.ogg
 
+#begin gmtk/gmtk23_levelcomplete.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/gmtk23_levelcomplete.ogg
+
 #begin gmtk/gmtk23_repeat1.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
@@ -357,6 +363,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:gmtk/gmtk23_shoot9.ogg
+
+#begin gmtk/music_boss.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:gmtk/music_boss.ogg
 
 #begin gmtk/music_interlude.ogg
 /importer:OggImporter
