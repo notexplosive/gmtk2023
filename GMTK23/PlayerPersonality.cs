@@ -32,6 +32,7 @@ public class PlayerPersonality
     // the zone in which the player is comfortable moving around, they will only leave this zone if they do so by accident
     // their AI only checks within the comfort zone for calculations
     public RectangleF ComfortZone { get; set; } = new (Vector2.Zero, new Vector2(420, 420 / 3f));
+    public float FearOfBulletsPercent { get; set; } = 0.5f;
 
     public RectangleF PreferredZone(Vector2 worldSize)
     {

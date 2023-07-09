@@ -10,28 +10,21 @@ namespace GMTK23;
 
 public class EnemyShip : Ship
 {
-    private readonly SequenceTween? _currentTween;
+    private SequenceTween? _currentTween;
     private readonly bool _doesNotShoot;
     private readonly int _frame;
     private readonly ShipStats _shipStats;
+    private readonly ShipChoreoid _shipChoreoid;
     private readonly float _speed;
     private float _bulletCooldownTimer;
     private bool _isFirst = true;
 
     public EnemyShip(ShipStats shipStats, ShipChoreoid shipChoreoid) : base(Team.Enemy, shipStats.Health)
     {
-        _currentTween = shipChoreoid.GenerateTween(
-            this,
-            new TweenableFloat(
-                () => Position.X,
-                val => Position = new Vector2(val, Position.Y)),
-            new TweenableFloat(
-                () => Position.Y,
-                val => Position = new Vector2(Position.X, val))
-        );
         _speed = shipStats.Speed;
         _frame = shipStats.Frame;
         _shipStats = shipStats;
+        _shipChoreoid = shipChoreoid;
         _bulletCooldownTimer = shipStats.BulletStats.Cooldown * Client.Random.Clean.NextFloat();
         _doesNotShoot = _shipStats.BulletStats.Speed == 0;
         
@@ -115,8 +108,20 @@ public class EnemyShip : Ship
     {
         if (_isFirst)
         {
+            _currentTween = _shipChoreoid.GenerateTween(
+                this,
+                new TweenableFloat(
+                    () => Position.X,
+                    val => Position = new Vector2(val, Position.Y)),
+                new TweenableFloat(
+                    () => Position.Y,
+                    val => Position = new Vector2(Position.X, val))
+            );
+            
             _isFirst = false;
-            World.PlayerStatistics.Intensity += 5;
+            World.PlayerStatistics.Intensity += 1;
+            
+            
         }
         
         DamageFlashTimer -= dt;

@@ -4,7 +4,7 @@ namespace GMTK23;
 
 public class PlayerStatistics
 {
-    private float _intensity = 0;
+    private float _intensity = -75;
 
     public float Intensity
     {
@@ -23,7 +23,14 @@ public class PlayerStatistics
     {
         if (MathF.Abs(IntensityAsBidirectionalPercent) < 0.25f &&  hasEnemies && Health > 0)
         {
-            BossMeter += dt / Math.Max(5, 10 - Level);
+            var increment = dt / Math.Max(5, 10 - Level * 2f);
+
+            if (Level == 0)
+            {
+                // boss meter takes twice as long to raise on level 0, player is supposed to fail on the first go
+                increment /= 2f;
+            }
+            BossMeter += increment;
         }
     }
 

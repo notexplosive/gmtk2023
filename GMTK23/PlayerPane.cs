@@ -37,6 +37,22 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
                 Alignment.TopCenter, new DrawSettings {Color = Color.Black});
             var barRect = bodyRect.Inflated(-10, -10).Moved(new Vector2(0, 10));
 
+
+            var moodColor = Color.White;
+            var biPercent = _game.World.PlayerStatistics.IntensityAsBidirectionalPercent;
+
+            if (biPercent < 0)
+            {
+                moodColor = Color.DarkBlue.BrightenedBy(1 - Math.Abs(biPercent));
+            }
+            
+            if (biPercent > 0)
+            {
+                moodColor = Color.DarkRed.BrightenedBy(1 - Math.Abs(biPercent));
+            }
+            
+            
+            painter.DrawRectangle(barRect, new DrawSettings {Color = moodColor, Depth = Depth.Front +  100});
             painter.DrawLineRectangle(barRect, new LineDrawSettings {Color = Color.Black, Depth = Depth.Front});
             var halfWidth = barRect.Width / 2f;
 

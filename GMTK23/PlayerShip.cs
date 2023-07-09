@@ -112,6 +112,10 @@ public class PlayerShip : Ship
         World.PlayerStatistics.Bombs = _bombs;
         World.PlayerStatistics.CurrentPowerUp = _currentPowerUp;
 
+        World.PlayerStatistics.Intensity += Enemies.OfType<Ship>().Count(ship => (ship.Position - Position).Length() < 32) * dt * 5;
+        World.PlayerStatistics.Intensity += Enemies.Count(ship => (ship.Position - Position).Length() < 32) * dt;
+        World.PlayerStatistics.Intensity += Bullets.Count(bullet => bullet.Team == Team.Enemy) * dt;
+
         if (World.PlayerStatistics.IntensityAsBidirectionalPercent > .9f)
         {
             DeployBomb();
@@ -161,8 +165,9 @@ public class PlayerShip : Ship
             if (bullet.Team == Team.Enemy)
             {
                 var bulletRect = bullet.DealDamageBox.Inflated(5, 5);
+                var bulletInflate = 10 * _personality.FearOfBulletsPercent;
                 Heatmap.Zonify(
-                    RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0, 5 * _speed), bulletRect.BottomRight),
+                    RectangleF.FromCorners(bulletRect.TopLeft - new Vector2(0, 5 * _speed), bulletRect.BottomRight).Inflated(bulletInflate,bulletInflate),
                     -dt * 2);
             }
         }
@@ -202,7 +207,7 @@ public class PlayerShip : Ship
                     );
 
                     // reset intensity after using bomb
-                    World.PlayerStatistics.Intensity = 0;
+                    // World.PlayerStatistics.Intensity = 0;
                 });
             }
         }
@@ -413,6 +418,11 @@ public class PlayerShip : Ship
             }
 
             return vec;
+        }
+
+        public bool IsNone()
+        {
+            return Horizontal == 0 && Vertical == 0;
         }
     }
 }

@@ -136,7 +136,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "Then we drop the Boss on them!",
                 "Now THAT's when you start rolling out the big guns, like you did just now.",
                 "Gotta make our Coins somehow, right?",
-                "Speaking of... There's a Coin coming down the slot. That's you're cue!",
+                "Speaking of! There's a Coin coming down the slot...",
                 "Showtime!"
             };
         }
@@ -150,7 +150,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "Not every Player will play the same way...",
                 "Or respond to the same way to enemies.",
                 "You gotta tailor the experience to The Player in front of you.",
-                "Go get 'em Champ!",
+                "Go get 'em champ!",
             };
         }
 

@@ -60,7 +60,7 @@ public class World : IUpdateHook
 
         if (enemyShips.Count == 0)
         {
-            PlayerStatistics.Intensity -= dt * 10;
+            PlayerStatistics.Intensity -= dt * 20;
         }
 
         foreach (var bullet in bullets)
