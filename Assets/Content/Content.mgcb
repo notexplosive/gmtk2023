@@ -472,9 +472,3 @@
 #begin gmtk/VT323-Regular.ttf
 /copy:gmtk/VT323-Regular.ttf
 
-#begin gmtk/Whiten.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:gmtk/Whiten.fx
-

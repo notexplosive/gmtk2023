@@ -164,7 +164,7 @@ public class MainCartridge : BasicGameCartridge
                 var canvas = new Canvas(sheet.Width, sheet.Height);
 
                 Client.Graphics.PushCanvas(canvas);
-                painter.BeginSpriteBatch(Matrix.Identity, Client.Assets.GetEffect("gmtk/Whiten"));
+                painter.BeginSpriteBatch(Matrix.Identity);
                 painter.DrawAtPosition(sheet, Vector2.Zero);
                 painter.EndSpriteBatch();
                 Client.Graphics.PopCanvas();
@@ -179,7 +179,7 @@ public class MainCartridge : BasicGameCartridge
                 var canvas = new Canvas(sheet.Width, sheet.Height);
 
                 Client.Graphics.PushCanvas(canvas);
-                painter.BeginSpriteBatch(Matrix.Identity, Client.Assets.GetEffect("gmtk/Whiten"));
+                painter.BeginSpriteBatch(Matrix.Identity);
                 painter.DrawAtPosition(sheet, Vector2.Zero);
                 painter.EndSpriteBatch();
                 Client.Graphics.PopCanvas();
