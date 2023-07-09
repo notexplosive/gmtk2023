@@ -40,16 +40,25 @@ public class Game : IEarlyDrawHook, IDrawHook, IUpdateHook, IUpdateInputHook
 
         _backgroundSprites = new List<BackgroundObject>();
 
-        var backgroundSpriteCount = 3;
-        for (var i = 0; i < backgroundSpriteCount + 1; i++)
+        var backgroundSpriteCount = 5;
+        for (var i = 0; i < backgroundSpriteCount; i++)
         {
-            var x = 420 / backgroundSpriteCount * i - 32;
             _backgroundSprites.Add(new BackgroundObject(
                 Client.Assets.GetAsset<SpriteSheet>("BigSheet"),
                 new Vector2(
-                    x,
-                    x + 128 * Client.Random.Dirty.NextFloat()
-                )
+                    -32,
+                    (420f + 64) / backgroundSpriteCount * i
+                ),
+                Depth.Middle - i
+            ));
+            
+            _backgroundSprites.Add(new BackgroundObject(
+                Client.Assets.GetAsset<SpriteSheet>("BigSheet"),
+                new Vector2(
+                    420 - 32,
+                    (420f + 64) / backgroundSpriteCount * i
+                ),
+                Depth.Middle - i
             ));
         }
         
