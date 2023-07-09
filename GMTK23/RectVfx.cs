@@ -12,13 +12,14 @@ public class RectVfx : Entity
     public TweenableVector2 TweenableSize { get; } = new(Vector2.Zero);
     public TweenableFloat TweenableAngle { get; } = new(0);
     public TweenableFloat TweenableOpacity { get; } = new(1);
+    public Color Color { get; set; } = Color.White;
 
     public override void Draw(Painter painter)
     {
         painter.DrawRectangle(
             new RectangleF(Position, TweenableSize),
             new DrawSettings
-                {Angle = TweenableAngle, Color = Color.White.WithMultipliedOpacity(TweenableOpacity), Origin = DrawOrigin.Center});
+                {Angle = TweenableAngle, Color = Color.WithMultipliedOpacity(TweenableOpacity), Origin = DrawOrigin.Center});
     }
 
     public override void Update(float dt)

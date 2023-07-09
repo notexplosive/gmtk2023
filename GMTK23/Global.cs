@@ -18,7 +18,7 @@ public static class Global
     {
         var instance = Client.Assets.GetSoundEffectInstance($"gmtk/{soundName}");
         instance.Stop();
-        instance.Volume = 0.5f;
+        instance.Volume = 0.35f;
         instance.Play();
     }
 }

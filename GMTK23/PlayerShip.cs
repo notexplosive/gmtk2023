@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using ExplogineCore.Data;
 using ExplogineMonoGame;
@@ -15,13 +14,14 @@ public class PlayerShip : Ship
     private readonly PlayerPersonality _personality;
     private readonly float _speed = 5f;
     private float _animTimer;
+    private float _bombCooldown;
+    private int _bombs = 3;
+    private PowerUpType? _currentPowerUp;
     private float _gunCooldownTimer;
     private InputState _inputState = new();
     private bool _invisibleToggle;
     private float _invulnerableTimer;
     private bool _shouldAnimate;
-    private PowerUpType? _currentPowerUp;
-    private int _bombs = 3;
 
     public PlayerShip(PlayerPersonality personality) : base(Team.Player, 5)
     {
@@ -37,18 +37,18 @@ public class PlayerShip : Ship
                     new MultiplexTween()
                         .AddChannel(
                             new SequenceTween().Add(
-                            vfx.TweenableSize.TweenTo(
-                            new Vector2(100,100),
-                            0.7f,
-                            Ease.CubicFastSlow)
-                            )
+                                    vfx.TweenableSize.TweenTo(
+                                        new Vector2(100, 100),
+                                        0.7f,
+                                        Ease.CubicFastSlow)
+                                )
                                 .Add(
                                     vfx.TweenableSize.TweenTo(
-                                        new Vector2(80,80),
+                                        new Vector2(80, 80),
                                         0.3f,
                                         Ease.CubicSlowFast)
-                                    )
-                            )
+                                )
+                        )
                         .AddChannel(vfx.TweenableAngle.TweenTo(MathF.PI * 4, 1f, Ease.Linear))
                         .AddChannel(
                             new SequenceTween()
@@ -70,7 +70,7 @@ public class PlayerShip : Ship
         World.PlayerStatistics.Intensity += 20;
         Global.PlaySound("gmtk23_enemy4");
         Client.Debug.Log($"Took Damage {Health}");
-            _invulnerableTimer = 1f;
+        _invulnerableTimer = 1f;
     }
 
     public override void Awake()
@@ -107,15 +107,21 @@ public class PlayerShip : Ship
 
     public override void Update(float dt)
     {
+        _bombCooldown -= dt;
         World.PlayerStatistics.Health = Health;
         World.PlayerStatistics.Bombs = _bombs;
         World.PlayerStatistics.CurrentPowerUp = _currentPowerUp;
-        
+
+        if (World.PlayerStatistics.IntensityAsBidirectionalPercent > .9f)
+        {
+            DeployBomb();
+        }
+
         if (!World.IsStarted)
         {
             return;
         }
-        
+
         Heatmap.Update(dt);
 
         _invulnerableTimer -= dt;
@@ -147,7 +153,7 @@ public class PlayerShip : Ship
 
         foreach (var powerUp in PowerUps)
         {
-            Heatmap.Zonify(powerUp.BoundingBox.Inflated(10,10), dt * 20);
+            Heatmap.Zonify(powerUp.BoundingBox.Inflated(10, 10), dt * 20);
         }
 
         foreach (var bullet in Bullets)
@@ -166,6 +172,37 @@ public class PlayerShip : Ship
 
         Position += _inputState.ToVector2() * _speed;
         Position = new RectangleF(Position, Vector2.Zero).ConstrainedTo(World.Bounds).Center;
+    }
+
+    private void DeployBomb()
+    {
+        if (_bombs > 0 && _bombCooldown < 0)
+        {
+            _bombCooldown = 1f;
+            _bombs--;
+            foreach (var enemy in Enemies)
+            {
+                if (enemy is not Boss)
+                {
+                    enemy.Destroy();
+                }
+
+                World.Entities.DeferredActions.Add(() =>
+                {
+                    Global.PlaySound("gmtk23_explode1");
+                    var vfx = World.Entities.AddImmediate(new RectVfx());
+                    vfx.Color = Color.LightGreen;
+                    vfx.Position = Position;
+                    vfx.RenderDepth = Depth.Front;
+                    vfx.TweenableOpacity.Value = 0.5f;
+                    vfx.Tween.Add(
+                        new MultiplexTween()
+                            .AddChannel(vfx.TweenableSize.TweenTo(new Vector2(420) * 2, 0.5f, Ease.CubicFastSlow))
+                            .AddChannel(vfx.TweenableOpacity.TweenTo(0, 0.5f, Ease.CubicFastSlow))
+                    );
+                });
+            }
+        }
     }
 
     private void ExecuteInput(float dt)
@@ -196,7 +233,7 @@ public class PlayerShip : Ship
                 {
                     bulletStats = ScriptContent.PlayerBulletHoming;
                 }
-                
+
                 if (_currentPowerUp == PowerUpType.PiercingShot)
                 {
                     bulletStats = ScriptContent.PlayerBulletPiercing;
@@ -327,6 +364,13 @@ public class PlayerShip : Ship
         return _invulnerableTimer > 0;
     }
 
+    public void Equip(PowerUpType type)
+    {
+        _currentPowerUp = type;
+        Global.PlaySound("gmtk23_select2");
+        World.TextDoober(Position, "Power Up!");
+    }
+
     public class InputState
     {
         public float Horizontal;
@@ -344,12 +388,5 @@ public class PlayerShip : Ship
 
             return vec;
         }
-    }
-    
-    public void Equip(PowerUpType type)
-    {
-        _currentPowerUp = type;
-        Global.PlaySound("gmtk23_select2");
-        World.TextDoober(Position,"Power Up!");
     }
 }
