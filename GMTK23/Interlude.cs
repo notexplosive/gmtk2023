@@ -126,7 +126,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "You must be the new recruit!",
                 "Welcome to the Pest Control Arcade Cabinet SKU 4322156-A.",
                 "I know it's your first day but...",
-                "We're not here to kill The Player, were here to put on a good game!",
+                "We're not here to kill The Player, we're here to put on a good game!",
                 "If it's too hard, it's stressful. If it's too easy, it's boring.",
                 "We want that sweet spot, right in the middle.",
                 "We call that the \"Flow\" state!",
