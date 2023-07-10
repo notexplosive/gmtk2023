@@ -9,5 +9,5 @@ git clone git@github.com:notexplosive/gmtk2023.git --init --recursive
 cd gmtk2023
 
 # runs the game in release mode
-dotnet run --project GMTK2023 --configuration Release
+dotnet run --project GMTK23 --configuration Release
 ```
