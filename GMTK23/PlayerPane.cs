@@ -22,9 +22,10 @@ public class PlayerPane : Widget, IEarlyDrawHook, IUpdateHook
     {
         Client.Graphics.PushCanvas(Canvas);
         painter.BeginSpriteBatch();
+        var playerSheet = Client.Assets.GetAsset<SpriteSheet>("PlayersSheet");
         var playerPane = Client.Assets.GetAsset<SpriteSheet>("PlayerPane");
         playerPane.DrawFrameAtPosition(painter, 0, Vector2.Zero, Scale2D.One, new DrawSettings{Depth = Depth.Back - 100});
-        playerPane.DrawFrameAtPosition(painter, 1, Vector2.Zero + new Vector2(MathF.Sin(_time * 5),0), Scale2D.One, new DrawSettings{Depth = Depth.Back - 101});
+        playerSheet.DrawFrameAtPosition(painter, _game.Persona.FrameIndex % playerSheet.FrameCount, Vector2.Zero + new Vector2(MathF.Sin(_time * 5),0), Scale2D.One, new DrawSettings{Depth = Depth.Back - 101});
         painter.EndSpriteBatch();
         
         painter.BeginSpriteBatch();

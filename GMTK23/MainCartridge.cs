@@ -240,6 +240,9 @@ public class MainCartridge : BasicGameCartridge
         yield return new AssetLoadEvent("PlayerPane",
             () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/player-pane"), new Point(162, 208)));
 
+        yield return new AssetLoadEvent("PlayersSheet",
+            () => new GridBasedSpriteSheet(Client.Assets.GetTexture("gmtk/players-sheet"), new Point(162, 162)));
+
         yield return new AssetLoadEvent("BackgroundTexture",
             () =>
             {

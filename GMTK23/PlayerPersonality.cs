@@ -33,6 +33,7 @@ public class PlayerPersonality
     // their AI only checks within the comfort zone for calculations
     public RectangleF ComfortZone { get; set; } = new (Vector2.Zero, new Vector2(420, 420 / 3f));
     public float FearOfBulletsPercent { get; set; } = 0.5f;
+    public int FrameIndex { get; set; } = 0;
 
     public RectangleF PreferredZone(Vector2 worldSize)
     {

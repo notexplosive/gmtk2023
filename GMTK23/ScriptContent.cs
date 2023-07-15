@@ -341,6 +341,7 @@ public static class ScriptContent
             ComfortZone = new RectangleF(Vector2.Zero, new Vector2(420, 420)),
             ShootReactionSkillPercent = 0.5f,
             FearOfBulletsPercent = 0.6f,
+            FrameIndex = 1,
         };
 
         yield return new PlayerPersonality
@@ -349,6 +350,7 @@ public static class ScriptContent
             ComfortZone = RectangleF.FromCorners(new Vector2(0, 100), new Vector2(420, 110)),
             ShootReactionSkillPercent = 0.1f,
             FearOfBulletsPercent = 1f,
+            FrameIndex = 2,
         };
         
         yield return new PlayerPersonality
@@ -358,6 +360,7 @@ public static class ScriptContent
             ComfortZone = new RectangleF(Vector2.Zero, new Vector2(420, 420)),
             ShootReactionSkillPercent = 1f,
             FearOfBulletsPercent = 0.1f,
+            FrameIndex = 3,
         };
     }
 }

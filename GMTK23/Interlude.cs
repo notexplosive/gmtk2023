@@ -237,7 +237,7 @@ public class Interlude : Widget, IEarlyDrawHook, IUpdateInputHook, IUpdateHook
                 "Is it cool if I break character for a moment?",
                 "(ahem)",
                 "Thanks for playing our GMTK Game Jam entry!",
-                "This game was made in 48 Hours by NotExplosive, CreatiFish, The4thAD, and quarkimo.",
+                "This game was made in 48 hours by NotExplosive, CreatiFish, The4thAD, and quarkimo.",
                 "The theme was \"Roles Reversed\"",
                 "You can keep playing if you want!",
                 "But you've pretty much seen all the content."
